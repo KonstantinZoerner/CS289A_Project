@@ -13,7 +13,6 @@ class Data:
 
         # load data
         data = np.genfromtxt(path, delimiter=',', dtype=None)
-        print(data)
 
         # split labels and features
         if dataset == "cancer":
@@ -39,7 +38,6 @@ class Data:
 
 
     def split_by_number(self, n_train, n_val, n_test, shuffel=True):
-        print(n_train + n_val + n_test, self.n_samples)
         assert n_train + n_val + n_test <= self.n_samples
         if shuffel:
             temp = np.hstack((self.labels, self.features))

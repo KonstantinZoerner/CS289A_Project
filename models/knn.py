@@ -45,6 +45,5 @@ def grid_search(train_features, train_labels, test_features, test_labels, is_wei
 if __name__ == "__main__":
     data = load_data.Data()
     data.split_by_ratio(0.8, 0, 0.2)
-    print("#########")
     print(data.test_labels)
     grid_search(data.train_features, data.train_labels, data.test_features, data.test_labels)
