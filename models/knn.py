@@ -2,6 +2,7 @@ from sklearn.neighbors import NearestNeighbors
 from src.losses import One_Zero_Loss
 import numpy as np
 import matplotlib.pyplot as plt
+import src.load_data as load_data
 
 def grid_search(train_features, train_labels, test_features, test_labels, is_weighted=False, verbose=True):
     knn = NearestNeighbors(n_neighbors=100).fit(train_features)
@@ -33,4 +34,5 @@ def grid_search(train_features, train_labels, test_features, test_labels, is_wei
     return ks[idx]
 
 if __name__ == "__main__":
-    pass
+    data = load_data.Data()
+    
