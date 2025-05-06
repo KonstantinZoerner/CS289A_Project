@@ -24,4 +24,6 @@ class Data:
 
 
 if __name__ == "__main__":
-    data = Data(dataset = "diabetes")
+    data = Data(dataset = "cancer")
+    print(data.features.shape)
+    print(data.labels.shape)
