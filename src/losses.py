@@ -6,4 +6,6 @@ class Loss(ABC):
 
 class One_Zero_Loss(Loss):
     def __call__(self, y, y_hat):
-        return np.sum(y == y_hat) / y.size
+        # print(y.shape, y_hat.shape)
+        # print(y, y_hat)
+        return 1 - np.sum(y == y_hat) / y.size

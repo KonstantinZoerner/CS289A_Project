@@ -13,14 +13,16 @@ class Data:
 
         # load data
         data = np.genfromtxt(path, delimiter=',', dtype=None)
-        
+        print(data)
+
         # split labels and features
         if dataset == "cancer":
-            self.labels = data[:, [1]]
-            self.features = data[:, 2:]
+
+            self.labels = (data[1:, [1]] == b'M').astype(float)
+            self.features = data[1:, 2:].astype(float)
         else:
-            self.labels = data[:, [0]]
-            self.features = data[:, 1:]
+            self.labels = data[1:, [0]].astype(float)
+            self.features = data[1:, 1:].astype(float)
     
         # compute constants
         self.n_samples, self.n_features = self.features.shape
@@ -56,11 +58,8 @@ class Data:
 
 if __name__ == "__main__":
     data = Data(dataset = "cancer")
-    print(data.features.shape)
-    print(data.labels.shape)
+  
 
-    data.split_by_ratio(0.6, 0.1, 0.3)
-
-    print(data.train_features.shape)
-    print(data.val_features.shape)
-    print(data.test_features.shape)
+    data.split_by_ratio(0.6, 0.4, 0, shuffel=False)
+    print(data.train_features)
+    print(data.train_labels)

@@ -1,10 +1,16 @@
+import sys
+import os
+sys.path.append(os.path.abspath('.'))
+
+import scipy.stats
 from sklearn.neighbors import NearestNeighbors
 from src.losses import One_Zero_Loss
 import numpy as np
 import matplotlib.pyplot as plt
 import src.load_data as load_data
+import scipy
 
-def grid_search(train_features, train_labels, test_features, test_labels, is_weighted=False, verbose=True):
+def grid_search(train_features, train_labels, test_features, test_labels, is_weighted=False, loss = One_Zero_Loss(), verbose=True):
     knn = NearestNeighbors(n_neighbors=100).fit(train_features)
 
     if verbose:
@@ -14,7 +20,10 @@ def grid_search(train_features, train_labels, test_features, test_labels, is_wei
     mean_errors = []
     for k in ks:
         distances, indices = knn.kneighbors(test_features, n_neighbors=k)
-        error = One_Zero_Loss(indices, train_labels, test_labels, distances, is_weighted)
+        pred = scipy.stats.mode(train_labels[indices], axis=1)[0]
+        pred = pred.reshape((-1, 1))
+        print(pred.shape)
+        error = loss(pred, test_labels)
         mean_errors.append(error)
         if verbose:
             print(f'Error: {error:.1f}')
@@ -35,4 +44,7 @@ def grid_search(train_features, train_labels, test_features, test_labels, is_wei
 
 if __name__ == "__main__":
     data = load_data.Data()
-    
+    data.split_by_ratio(0.8, 0, 0.2)
+    print("#########")
+    print(data.test_labels)
+    grid_search(data.train_features, data.train_labels, data.test_features, data.test_labels)
