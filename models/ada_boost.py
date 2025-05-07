@@ -10,4 +10,4 @@ class AdaBoost(AdaBoostClassifier):
 
     def model_size(self):
         #TODO what about leaf nodes
-        return (len(self.estimator_) + np.sum([estimator.tree_.node_count * 2 for estimator in self.estimator_]))
+        return np.sum([1 + estimator.tree_.node_count * 2 for estimator in self.estimators_])

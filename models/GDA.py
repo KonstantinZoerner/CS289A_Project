@@ -1,4 +1,5 @@
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis, LinearDiscriminantAnalysis
+import numpy as np
 
 class QDA(QuadraticDiscriminantAnalysis):
     def __init__(self, **kwargs):
@@ -7,7 +8,7 @@ class QDA(QuadraticDiscriminantAnalysis):
         super().__init__(**kwargs)
 
     def model_size(self):
-        return self.means_.size + self.covariance_.size
+        return np.sum([mean.size for mean in self.means_]) + np.sum([covariance.size for covariance in self.covariance_])
 
 class LDA(LinearDiscriminantAnalysis):
     def __init__(self, **kwargs):
@@ -16,4 +17,4 @@ class LDA(LinearDiscriminantAnalysis):
         super().__init__(**kwargs)
 
     def model_size(self):
-        return self.means_.size + self.covariance_.size
+        return np.sum([mean.size for mean in self.means_]) + np.sum([covariance.size for covariance in self.covariance_])
