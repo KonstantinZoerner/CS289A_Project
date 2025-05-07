@@ -33,21 +33,25 @@ class Data:
         print(f"Finished loading data in {t_1 - t_0} sec")
          
 
-    def split_by_ratio(self, r_train, r_val, r_test, shuffel=True):
+    def split_by_ratio(self, r_train, r_val, r_test, shuffel=True, rng = None):
         assert r_train + r_val + r_test <= 1
 
         n_train = int(np.round(r_train*self.n_samples))
         n_val = int(np.round((r_train + r_val)*self.n_samples) - n_train)
         n_test = int(np.round((r_train + r_val + r_test)*self.n_samples) - n_val - n_train)
 
-        self.split_by_number(n_train, n_val, n_test, shuffel=shuffel)
+        self.split_by_number(n_train, n_val, n_test, shuffel=shuffel, rng = rng)
 
 
-    def split_by_number(self, n_train, n_val, n_test, shuffel=True):
+    def split_by_number(self, n_train, n_val, n_test, shuffel=True, rng = None):
         assert n_train + n_val + n_test <= self.n_samples
+
+        if rng == None:
+            rng = np.random.default_rng()
+
         if shuffel:
             temp = np.hstack((self.labels.reshape(-1, 1), self.features))
-            np.random.shuffle(temp)
+            rng.shuffle(temp)
             self.labels = temp[:, 0]
             self.features = temp[:, 1:]
         
