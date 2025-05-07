@@ -5,15 +5,17 @@ import src.load_data as load_data
 import models.GDA as GDA
 import models.decision_trees as dt
 import models.knn as knn
+import models.svm as svm
 from src.losses import One_Zero_Loss
 
 rng = np.random.default_rng(1)
 
-models = {"GDA": GDA.QDA(reg_param = 1e-4),
+models = {"QDA": GDA.QDA(reg_param = 1e-4),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(),
           "Random Forrest": dt.RandomForest(),
-          "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),}
+          "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
+          "SVM": svm.SVM()}
           #"kNN": knn.KNN()
 
 datasets = ["cancer", "diabetes"]
