@@ -20,10 +20,10 @@ class Data:
         # split labels and features
         if dataset == "cancer":
 
-            self.labels = (data[1:, [1]] == b'M').astype(float)
+            self.labels = (data[1:, 1] == b'M').astype(float)
             self.features = data[1:, 2:].astype(float)
         else:
-            self.labels = data[1:, [0]].astype(float)
+            self.labels = data[1:, 0].astype(float)
             self.features = data[1:, 1:].astype(float)
     
         # compute constants
@@ -48,7 +48,7 @@ class Data:
         if shuffel:
             temp = np.hstack((self.labels, self.features))
             np.random.shuffle(temp)
-            self.labels = temp[:, [0]]
+            self.labels = temp[:, 0]
             self.features = temp[:, 1:]
         
         self.train_features = self.features[:n_train, :]
