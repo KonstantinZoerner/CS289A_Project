@@ -6,6 +6,7 @@ import models.GDA as GDA
 import models.decision_trees as dt
 import models.knn as knn
 import models.svm as svm
+import models.ada_boost as ada_boost
 from src.losses import One_Zero_Loss
 
 rng = np.random.default_rng(1)
@@ -15,7 +16,8 @@ models = {"QDA": GDA.QDA(reg_param = 1e-4),
           "Decicision Tree": dt.DecicisonTree(),
           "Random Forrest": dt.RandomForest(),
           "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
-          "SVM": svm.SVM()}
+          "SVM": svm.SVM(),
+          "AdaBoost": ada_boost.AdaBoost()}
           #"kNN": knn.KNN()
 
 datasets = ["cancer", "diabetes"]
