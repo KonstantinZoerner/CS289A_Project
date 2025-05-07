@@ -24,9 +24,12 @@ datasets = ["cancer", "diabetes"]
 
 index = pd.MultiIndex.from_product([datasets, models.keys()], names=["dataset", "model"])
 
-training_times = pd.DataFrame(index=index, columns=["time"])
-predict_times = pd.DataFrame(index=index, columns=["time"])
-error = pd.DataFrame(index=index, columns=["error"])
+# training_times = pd.DataFrame(index=index, columns=["time"])
+# predict_times = pd.DataFrame(index=index, columns=["time"])
+# error = pd.DataFrame(index=index, columns=["error"])
+# model_sizes = pd.DataFrame(index=index, columns=["size"])
+
+runtime_results = pd.DataFrame(index=index, columns=["training_time", "predict_time", "error", "model_size"])
 
 for dataset in datasets:
     data = load_data.Data(dataset, verbose=True)
@@ -38,16 +41,17 @@ for dataset in datasets:
         model.fit(data.train_features, data.train_labels)
 
         t_1 = time.perf_counter()
-        training_times.loc[(dataset, name), "time"] = t_1 - t_0
+        runtime_results.loc[(dataset, name), "training_time"] = t_1 - t_0
 
         y_pred = model.predict(data.val_features)
 
         t_2 = time.perf_counter()
-        predict_times.loc[(dataset, name), "time"] = t_2 - t_1
+        runtime_results.loc[(dataset, name), "predict_time"] = t_2 - t_1
         
         loss = One_Zero_Loss()
-        error.loc[(dataset, name), "error"] = loss(y_pred, data.val_labels)
+        runtime_results.loc[(dataset, name), "error"] = loss(y_pred, data.val_labels)
 
-print(f"\nTRAINING TIMES\n{training_times}")
-print(f"\nPREDICT TIMES\n{predict_times}")
-print(f"\nERROR\n{error}")
+        runtime_results.loc[(dataset, name), "size"] = model.model_size()
+
+print(runtime_results)
+runtime_results.to_csv("runtime_analysis.csv")
