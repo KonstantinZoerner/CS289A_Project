@@ -6,8 +6,6 @@ class AdaBoost(AdaBoostClassifier):
     def __init__(self, **kwargs):
         if 'estimator' not in kwargs:
             kwargs['estimator'] = DecisionTreeClassifier(max_depth=2)
-        if 'max_depth' not in kwargs:
-            kwargs['max_depth'] = 50
         super().__init__(**kwargs)
 
     def model_size(self):
