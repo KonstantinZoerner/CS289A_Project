@@ -51,7 +51,7 @@ for dataset in datasets:
         loss = One_Zero_Loss()
         runtime_results.loc[(dataset, name), "error"] = loss(y_pred, data.val_labels)
 
-        runtime_results.loc[(dataset, name), "size"] = model.model_size()
+        runtime_results.loc[(dataset, name), "model_size"] = model.model_size()
 
 print(runtime_results)
 runtime_results.to_csv("runtime_analysis.csv")
