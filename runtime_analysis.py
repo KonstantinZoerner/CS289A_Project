@@ -7,10 +7,14 @@ import models.decision_trees as dt
 import models.knn as knn
 from src.losses import One_Zero_Loss
 
+rng = np.random.default_rng(1)
+
 models = {"GDA": GDA.QDA(reg_param = 1e-4),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(),
-          "kNN": knn.KNN()}
+          "Random Forrest": dt.RandomForest(),
+          "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),}
+          #"kNN": knn.KNN()
 
 datasets = ["cancer", "diabetes"]
 
@@ -22,7 +26,7 @@ error = pd.DataFrame(index=index, columns=["error"])
 
 for dataset in datasets:
     data = load_data.Data(dataset, verbose=True)
-    data.split_by_ratio(0.6, 0.4, 0.0)
+    data.split_by_ratio(0.6, 0.4, 0.0, rng)
 
     for name, model in models.items():
         print(f"Analysing {name}")
