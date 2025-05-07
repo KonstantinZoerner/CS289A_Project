@@ -4,11 +4,21 @@ sys.path.append(os.path.abspath('.'))
 
 import scipy.stats
 from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import KNeighborsClassifier
 from src.losses import One_Zero_Loss
 import numpy as np
 import matplotlib.pyplot as plt
 import src.load_data as load_data
 import scipy
+
+
+class KNN(KNeighborsClassifier):
+    def __init__(self, n_neighbors=5, weights='uniform'):
+        super().__init__(n_neighbors=n_neighbors, weights=weights)
+
+    def model_size(self):
+        return self.n_neighbors * self.n_features_in_ + 1
+
 
 def grid_search(train_features, train_labels, test_features, test_labels, is_weighted=False, loss = One_Zero_Loss(), verbose=True):
     knn = NearestNeighbors(n_neighbors=100).fit(train_features)
