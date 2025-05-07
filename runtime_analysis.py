@@ -24,10 +24,6 @@ datasets = ["cancer", "diabetes"]
 
 index = pd.MultiIndex.from_product([datasets, models.keys()], names=["dataset", "model"])
 
-# training_times = pd.DataFrame(index=index, columns=["time"])
-# predict_times = pd.DataFrame(index=index, columns=["time"])
-# error = pd.DataFrame(index=index, columns=["error"])
-# model_sizes = pd.DataFrame(index=index, columns=["size"])
 
 runtime_results = pd.DataFrame(index=index, columns=["training_time", "predict_time", "error", "model_size"])
 
@@ -54,4 +50,4 @@ for dataset in datasets:
         runtime_results.loc[(dataset, name), "model_size"] = model.model_size()
 
 print(runtime_results)
-runtime_results.to_csv("runtime_analysis.csv")
+runtime_results.to_csv("analysis_data/runtime_analysis.csv")
