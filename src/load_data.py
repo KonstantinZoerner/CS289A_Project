@@ -1,8 +1,11 @@
 import numpy as np
+import time
 
 class Data:
 
-    def __init__(self, dataset="cancer"):
+    def __init__(self, dataset="cancer", verbose=False):
+        print(f"Loading dataset: {dataset}")
+        t_0 = time.perf_counter()
         # find path to dataset
         if dataset == "cancer":
             path = "datasets/breast_cancer/data.csv"
@@ -25,6 +28,9 @@ class Data:
     
         # compute constants
         self.n_samples, self.n_features = self.features.shape
+
+        t_1 = time.perf_counter()
+        print(f"Finished loading data in {t_1 - t_0} sec")
          
 
     def split_by_ratio(self, r_train, r_val, r_test, shuffel=True):
