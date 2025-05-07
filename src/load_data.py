@@ -55,9 +55,9 @@ class Data:
         self.val_features = self.features[n_train:n_train + n_val, :]
         self.test_features = self.features[n_train + n_val:, :]
 
-        self.train_labels = self.labels[:n_train, :]
-        self.val_labels = self.labels[n_train:n_train + n_val, :]
-        self.test_labels = self.labels[n_train + n_val:, :]
+        self.train_labels = self.labels[:n_train]
+        self.val_labels = self.labels[n_train:n_train + n_val]
+        self.test_labels = self.labels[n_train + n_val:]
         
 
 if __name__ == "__main__":
