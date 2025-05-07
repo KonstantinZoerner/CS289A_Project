@@ -46,7 +46,7 @@ class Data:
     def split_by_number(self, n_train, n_val, n_test, shuffel=True):
         assert n_train + n_val + n_test <= self.n_samples
         if shuffel:
-            temp = np.hstack((self.labels, self.features))
+            temp = np.hstack((self.labels.reshape(-1, 1), self.features))
             np.random.shuffle(temp)
             self.labels = temp[:, 0]
             self.features = temp[:, 1:]
