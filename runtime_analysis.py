@@ -7,6 +7,8 @@ import models.decision_trees as dt
 import models.knn as knn
 import models.svm as svm
 import models.ada_boost as ada_boost
+import models.logistic_regression as lr
+import models.neural_network as nn
 from src.losses import One_Zero_Loss
 import os
 from tqdm import tqdm
@@ -38,8 +40,10 @@ models = {"QDA": GDA.QDA(reg_param = 1e-4),
           "Random Forrest": dt.RandomForest(),
           "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
           "SVM": svm.SVM(),
-          "AdaBoost": ada_boost.AdaBoost()}
-          #"kNN": knn.KNN()
+          "AdaBoost": ada_boost.AdaBoost(),
+          "kNN": knn.KNN(),
+          "Logistic Regression": lr.LogisticRegression(),
+          "Neural Network": nn.NeuralNetwork()}
 
 max_string_length = max([len(name) for name in models.keys()])
 
@@ -75,7 +79,8 @@ for dataset in datasets:
                 new_runtime_results.loc[(dataset, ratio, name), "training_time"] += (t_1 - t_0)/runs
                 new_runtime_results.loc[(dataset, ratio, name), "predict_time"] += (t_2 - t_1)/runs
                 new_runtime_results.loc[(dataset, ratio, name), "error"] += (loss(y_pred, data.val_labels))/runs
-                new_runtime_results.loc[(dataset, ratio, name), "model_size"] += (model.model_size())/runs
+                if model.model_size() is not None:
+                    new_runtime_results.loc[(dataset, ratio, name), "model_size"] += (model.model_size())/runs
 
 
 if os.path.exists("analysis_data/{FILENAME}.csv") and LOAD_DATA:
