@@ -14,14 +14,16 @@ import os
 #                           Setteings
 #-------------------------------------------------------------
 
-FILENAME = "runtime_analysis_log_ratio_diabetes.csv"
+FILENAME = "runtime_analysis_test"
 LOAD_DATA = True
+SAVE_DATA = True
 
 # datasets = ["cancer", "diabetes"]
 datasets = ["diabetes"]
 
 #ratio_training_data = np.arange(0.1, 1.1, 0.1)
-ratio_training_data = np.logspace(-3, 0, 10, base=10)
+# ratio_training_data = np.logspace(-3, 0, 10, base=10)
+ratio_training_data = np.array([0.25, 0.5])
 print("ratios:", ratio_training_data)
 
 models = {"QDA": GDA.QDA(reg_param = 1e-4),
@@ -38,10 +40,13 @@ models = {"QDA": GDA.QDA(reg_param = 1e-4),
 #-------------------------------------------------------------
 
 rng = np.random.default_rng(1)
-if os.path.exists("analysis_data/runtime_analysis.csv") and LOAD_DATA:
-    runtime_results = pd.read_csv("analysis_data/runtime_analysis.csv", index_col=[0, 1, 2])
+index = pd.MultiIndex.from_product([datasets, ratio_training_data, models.keys()], names=["dataset", "training_ratio", "model"])
+if os.path.exists("analysis_data/{FILENAME}.csv") and LOAD_DATA:
+    old_runtime_results = pd.read_csv("analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
+    new_runtime_results = pd.DataFrame(index=index, columns=["training_time", "predict_time", "error", "model_size"])
+    runtime_results = pd.concat([old_runtime_results, new_runtime_results])
+    runtime_results = runtime_results.drop_duplicates()
 else:
-    index = pd.MultiIndex.from_product([datasets, ratio_training_data, models.keys()], names=["dataset", "training_ratio", "model"])
     runtime_results = pd.DataFrame(index=index, columns=["training_time", "predict_time", "error", "model_size"])
 
 for dataset in datasets:
@@ -70,4 +75,5 @@ for dataset in datasets:
             runtime_results.loc[(dataset, ratio, name), "model_size"] = model.model_size()
 
 print(runtime_results)
-runtime_results.to_csv(f"analysis_data/{FILENAME}.csv")
+if SAVE_DATA:
+    runtime_results.to_csv(f"analysis_data/{FILENAME}.csv")
