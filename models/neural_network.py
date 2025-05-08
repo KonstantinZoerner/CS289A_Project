@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
+from src.losses import One_Zero_Loss
 
 torch.manual_seed(1)
 torch.cuda.manual_seed(1)
@@ -23,15 +24,15 @@ class NeuralNetwork(nn.Module):
         out_size = int(torch.max(y_tensor).item()) + 1
 
         self.model = nn.Sequential(
-                    nn.Linear(in_size, 256),
-                    nn.BatchNorm1d(256),
+                    nn.Linear(in_size, 16),
+                    nn.BatchNorm1d(16),
                     nn.ReLU(),
-                    nn.Dropout(0.3),
-                    nn.Linear(256,64),
-                    nn.BatchNorm1d(64),
+                    nn.Dropout(0.2),
+                    nn.Linear(16,8),
+                    nn.BatchNorm1d(8),
                     nn.ReLU(),
-                    nn.Dropout(0.3),
-                    nn.Linear(64,out_size)
+                    nn.Dropout(0.2),
+                    nn.Linear(8,out_size)
                 ).to(self.device)
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.9)
@@ -69,3 +70,8 @@ class NeuralNetwork(nn.Module):
     
     def model_size(self):
         return sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+    
+    def eval(self, X, y):
+        y_pred = self.predict(X)
+        loss = One_Zero_Loss()
+        return loss(y_pred, y)
