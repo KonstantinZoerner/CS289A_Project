@@ -10,10 +10,12 @@ import models.ada_boost as ada_boost
 from src.losses import One_Zero_Loss
 import os
 from tqdm import tqdm
+import warnings
 
 #-------------------------------------------------------------
 #                           Setteings
 #-------------------------------------------------------------
+warnings.filterwarnings("ignore")
 
 NAME = "cancer_100_runs_[0.05-1.0, 0.5]"
 FILENAME = "runtime_analysis_" + NAME
