@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import pandas as pd 
 import src.utils as utils
 
@@ -76,6 +77,24 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
          
     # plot
     print("models", models)
+    fig_width = 3.25
+    fig_height = fig_width * 0.75
+    mpl.rcParams.update({
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.size": 10,
+        "axes.labelsize": 10,
+        "axes.titlesize": 10,
+        "legend.fontsize": 8,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "lines.linewidth": 1,
+        "lines.markersize": 4,
+        "figure.figsize": [fig_width, fig_height],
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42
+    })
+
     for i, label in enumerate(models):
         y_data = runtime_results.loc[(dataset, train_ratios, label), y].to_numpy()
         sorted_train_ratios, sorted_y_data = utils.sort_np_arrays_by_first_column(train_ratios, y_data)
@@ -84,10 +103,11 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
     plt.legend()
     plt.xlabel("Ratio of used Training Data")
     plt.ylabel(y_label)
-    if type(title) == str:
-        plt.title(title)
-    elif title is not None:
-        plt.title(f"{y_label} vs Ratio of used Training Data for {dataset} dataset")
+    # No plot title to comply with ICML format guidelines
+    #if type(title) == str:
+    #    plt.title(title)
+    #elif title is not None:
+    #    plt.title(f"{y_label} vs Ratio of used Training Data for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
     plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}_{NAME}.pdf", bbox_inches="tight")
