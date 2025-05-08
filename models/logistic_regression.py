@@ -1,7 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 
 
-def LogisticRegression(LogisticRegression):
+class LogisticRegression(LogisticRegression):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
