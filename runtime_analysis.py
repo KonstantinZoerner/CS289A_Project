@@ -10,8 +10,19 @@ import models.ada_boost as ada_boost
 from src.losses import One_Zero_Loss
 import os
 
+#-------------------------------------------------------------
+#                           Setteings
+#-------------------------------------------------------------
+
+FILENAME = "runtime_analysis_log_ratio_diabetes.csv"
 LOAD_DATA = True
-rng = np.random.default_rng(1)
+
+# datasets = ["cancer", "diabetes"]
+datasets = ["diabetes"]
+
+#ratio_training_data = np.arange(0.1, 1.1, 0.1)
+ratio_training_data = np.logspace(-3, 0, 10, base=10)
+print("ratios:", ratio_training_data)
 
 models = {"QDA": GDA.QDA(reg_param = 1e-4),
           "LDA": GDA.LDA(),
@@ -22,8 +33,11 @@ models = {"QDA": GDA.QDA(reg_param = 1e-4),
           "AdaBoost": ada_boost.AdaBoost()}
           #"kNN": knn.KNN()
 
-datasets = ["cancer", "diabetes"]
-ratio_training_data = np.arange(0.1, 1.1, 0.1)
+#-------------------------------------------------------------
+#                           Main
+#-------------------------------------------------------------
+
+rng = np.random.default_rng(1)
 if os.path.exists("analysis_data/runtime_analysis.csv") and LOAD_DATA:
     runtime_results = pd.read_csv("analysis_data/runtime_analysis.csv", index_col=[0, 1, 2])
 else:
@@ -31,9 +45,10 @@ else:
     runtime_results = pd.DataFrame(index=index, columns=["training_time", "predict_time", "error", "model_size"])
 
 for dataset in datasets:
+    data = load_data.Data(dataset, verbose=True)
+
     for ratio in ratio_training_data:
-        print("ratio")
-        data = load_data.Data(dataset, verbose=True)
+        print("ratio:", ratio)
         data.split_by_ratio(0.8*ratio, 0.2, 0.0, rng)
 
         for name, model in models.items():
@@ -55,4 +70,4 @@ for dataset in datasets:
             runtime_results.loc[(dataset, ratio, name), "model_size"] = model.model_size()
 
 print(runtime_results)
-runtime_results.to_csv("analysis_data/runtime_analysis.csv")
+runtime_results.to_csv(f"analysis_data/{FILENAME}.csv")
