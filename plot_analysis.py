@@ -124,3 +124,4 @@ if __name__ == "__main__":
     # plot_runtime_vs_model_complexity()
     # plot_runtime_vs_predict_time()
     plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear")
+    plot_runtime_vs_accuracy(dataset="cancer")
