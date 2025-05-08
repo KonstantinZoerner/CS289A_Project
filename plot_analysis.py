@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd 
 import src.utils as utils
 
-FILENAME = "runtime_analysis_log_ratio_diabetes"
-
+NAME = "cancer_100_runs_[0.05-1.0, 0.5]"
+FILENAME = "runtime_analysis_" + NAME
 
 # ------------------------------------------------------------
 # Scatter plot of two variables 
@@ -33,7 +33,7 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
         plt.title(f"{x_label} vs {y_label} for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
-    plt.savefig(f"figures/{x}_vs_{y}_{dataset}.pdf", bbox_inches="tight")
+    plt.savefig(f"figures/{x}_vs_{y}_{dataset}_{NAME}.pdf", bbox_inches="tight")
     plt.show()
 
 def plot_model_complexity_vs_accuracy(dataset="diabetes"):
@@ -61,7 +61,7 @@ def plot_runtime_vs_predict_time(dataset="diabetes"):
 # ------------------------------------------------------------
 def plot_x_vs_training_data_ratio(dataset="diabetes", y="error", 
                          models=None, remove_models=None, y_label="Error",
-                         title=None, x_scale="linear", y_scale="log", 
+                         title=None, x_scale="log", y_scale="linear", 
                          train_ratios=None, remove_ratios=None):
 
     runtime_results = pd.read_csv(f"analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
@@ -90,12 +90,12 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
         plt.title(f"{y_label} vs Ratio of used Training Data for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
-    plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}.pdf", bbox_inches="tight")
+    plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}_{NAME}.pdf", bbox_inches="tight")
     plt.show()
 
-def plot_error_vs_training_data_ratio(dataset="diabetes"):
+def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
     plot_x_vs_training_data_ratio(dataset=dataset, y="error", 
-                         y_label="Error", title=True, remove_models=["SVM"])
+                         y_label="Error", title=True, remove_models=["SVM"], *args, **kwargs)
 
 
 if __name__ == "__main__":
@@ -103,4 +103,4 @@ if __name__ == "__main__":
     # plot_runtime_vs_accuracy()
     # plot_runtime_vs_model_complexity()
     # plot_runtime_vs_predict_time()
-    plot_error_vs_training_data_ratio()
+    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear")
