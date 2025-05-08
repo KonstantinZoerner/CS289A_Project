@@ -8,13 +8,14 @@ torch.manual_seed(1)
 torch.cuda.manual_seed(1)
 
 class NeuralNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, verbose = False):
         super().__init__()
         self.model = None  # will be created during fit
         self.optimizer = None
         self.scheduler = None
         self.criterion = nn.CrossEntropyLoss()
         self.device = "cpu"
+        self.verbose = verbose
         
     def fit(self, X, y, epochs=20):
         X_tensor = torch.from_numpy(X)
@@ -41,13 +42,18 @@ class NeuralNetwork(nn.Module):
 
         dataset = TensorDataset(X_tensor, y_tensor)
         if y_tensor.shape[0] >= 10000:
-            dataloader = DataLoader(dataset, batch_size=512, shuffle=False)
+            dataloader = DataLoader(dataset, batch_size=512, shuffle=False, drop_last=True)
         else:
-            dataloader = DataLoader(dataset, batch_size=16, shuffle=False)
+            dataloader = DataLoader(dataset, batch_size=16, shuffle=False, drop_last=True)
 
         self.model.train()
         for epoch in range(epochs):
-            for x, y in tqdm(dataloader, unit="batch"):
+            if self.verbose:
+                iterator = tqdm(dataloader, unit="batch")
+            else:
+                iterator = dataloader
+
+            for x, y in iterator:
                 x, y = x.float().to(self.device), y.long().to(self.device)
                 self.optimizer.zero_grad() # Remove the gradients from the previous step
                 pred = self.model(x)
