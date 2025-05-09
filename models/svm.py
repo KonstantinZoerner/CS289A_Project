@@ -16,3 +16,5 @@ class non_linear_SVM(SVC):
 
     def model_size(self):
         return 0 # TODO: figure this out
+    
+    
