@@ -45,7 +45,7 @@ class HyperparameterTuning:
         print("Best hyperparameters:", self.best_params)
         print("Best score:", self.best_score)
 
-    def plot_results_1D(self, param_name, x_scale='log'):
+    def plot_results_1D(self, param_name, x_scale='log', show=False):
         fig_width = 3.25
         fig_height = fig_width * 0.75
         mpl.rcParams.update({
@@ -77,7 +77,9 @@ class HyperparameterTuning:
         plt.ylabel('Mean Accuracy')
         plt.grid(True)
         plt.savefig(f"grid_search_data/{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
-        plt.show()
+        if show:
+            plt.show()
+        plt.close()
 
     def save_results(self):
         results = {
@@ -90,12 +92,12 @@ class HyperparameterTuning:
         with open(f"grid_search_data/{self.name}_{self.runs}.json", "w") as f:
             json.dump(results, f, indent=4)
 
-def tune_SVC():
+def tune_SVC(data):
     model = SVC()
-    tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 100, 1000, 10000], 'kernel': ['linear']}, data=data)
+    tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 20, 50, 100, 200, 500, 1000], 'kernel': ['linear']}, data=data, runs=10)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='C', x_scale='log')
-
+    tuner.save_results()
     # "C" : 100, kernel = "linear"
 
 def tune_DecisionTree(data):
@@ -110,7 +112,7 @@ def tune_DecisionTree(data):
 
 def tune_RandomForest(data):
     model = RandomForestClassifier()
-    tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200, 300, 400, 500], 'max_depth': range(1, 11)}, data=data, runs=5)
+    tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200, 300, 400, 500], 'max_depth': range(1, 16)}, data=data, runs=30)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='max_depth', x_scale='linear')
     tuner.plot_results_1D(param_name='n_estimators', x_scale='linear')
@@ -140,6 +142,6 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
     data = load_data.Data(dataset="cancer")
 
-    # tune_SVC(data)
+    tune_SVC(data)
     # tune_DecisionTree(data)
-    tune_RandomForest(data)
+    #tune_RandomForest(data)
