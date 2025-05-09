@@ -32,7 +32,7 @@ for i, dataset in enumerate(datasets):
     model_size = 0
     data = load_data.Data(dataset, verbose=True)
     for run in tqdm(range(runs[i])):
-        data.split_by_ratio(0.4, 0.2, 0.0, rng)
+        data.split_by_ratio(0.8, 0.2, 0.0, rng)
         t_0 = time.perf_counter()
         model.fit(data.train_features, data.train_labels)
         t_1 = time.perf_counter()
