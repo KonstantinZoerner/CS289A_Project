@@ -1,6 +1,6 @@
 import pandas as pd
 
-def generate_latex_table_full(csv_path, dataset_name, target_ratio, decimal_places=1):
+def generate_latex_table_full(csv_path, dataset_name, category, target_ratio, decimal_places=1):
     # Load CSV with MultiIndex
     df = pd.read_csv(csv_path, index_col=[0, 1, 2])
     df.index.set_names(['dataset', 'training_ratio', 'model'], inplace=True)
@@ -10,7 +10,7 @@ def generate_latex_table_full(csv_path, dataset_name, target_ratio, decimal_plac
     df_filtered = df.loc[(dataset_name, target_ratio)]
 
     # Sort by error (optional, for cleaner table)
-    df_filtered = df_filtered.sort_values("error")
+    df_filtered = df_filtered.sort_values(category)
 
     # Build LaTeX table
     latex_lines = [
@@ -21,16 +21,21 @@ def generate_latex_table_full(csv_path, dataset_name, target_ratio, decimal_plac
         r"    \begin{center}",
         r"    \begin{small}",
         r"    \begin{sc}",
-        r"    \begin{tabular}{lc}",
+        r"    \begin{tabular}{lcc}",
         r"        \toprule",
         r"        Model & Error [\%] \\",
         r"        \midrule"
     ]
 
     for model_name, row in df_filtered.iterrows():
-        error = row["error"]
-        error_str = f"{100 * error:.{decimal_places}f}"  # convert to percentage
-        latex_lines.append(f"        {model_name} & {error_str} \\\\")
+        value = row[category]
+        if category == "error":
+            value_str = f"{100 * value:.{decimal_places}f}"
+        elif category == "training_time":
+            value_str = f"{1000 * value:.{decimal_places}f}"
+        else:
+            value_str = f"{value:.0f}"
+        latex_lines.append(f"        {model_name} & {value_str}\\\\")
 
     latex_lines += [
         r"        \bottomrule",
@@ -48,7 +53,8 @@ def generate_latex_table_full(csv_path, dataset_name, target_ratio, decimal_plac
 latex_code = generate_latex_table_full(
     csv_path="analysis_data/runtime_analysis_cancer_100_runs_[0.05-1.0, 0.5].csv",
     dataset_name="cancer",
-    target_ratio=0.5,
+    category = "training_time",
+    target_ratio=1,
     decimal_places=2
 )
 print(latex_code)
