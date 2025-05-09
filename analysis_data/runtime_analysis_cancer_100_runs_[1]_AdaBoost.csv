@@ -1,0 +1,2 @@
+dataset,training_ratio,model,training_time,predict_time,error,model_size
+cancer,1,AdaBoost,0.1731953299999077,0.006864467999985208,0.03219298245614035,746.9600000000002

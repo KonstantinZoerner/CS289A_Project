@@ -19,7 +19,7 @@ import warnings
 #-------------------------------------------------------------
 warnings.filterwarnings("ignore")
 
-NAME = "cancer_100_runs_[0.05-1.0, 0.5]"
+NAME = "cancer_100_runs_[1]_AdaBoost"
 FILENAME = "runtime_analysis_" + NAME
 LOAD_DATA = False
 SAVE_DATA = True
@@ -30,20 +30,21 @@ runs = 100
 datasets = ["cancer"]
 
 ratio_training_data = np.arange(0.05, 1.02, 0.05)
+ratio_training_data = [1]
 # ratio_training_data = np.logspace(-3, 0, 10, base=10)
 # ratio_training_data = np.array([0.25, 0.5])
 print("ratios:", ratio_training_data)
 
-models = {"QDA": GDA.QDA(reg_param = 1e-4),
-          "LDA": GDA.LDA(),
-          "Decicision Tree": dt.DecicisonTree(),
-          "Random Forrest": dt.RandomForest(),
-          "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
-          "SVM": svm.SVM(),
-          "AdaBoost": ada_boost.AdaBoost(),
-          "kNN": knn.KNN(),
-          "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()}
+models = {#"QDA": GDA.QDA(reg_param = 1e-4),
+          #"LDA": GDA.LDA(),
+          #"Decicision Tree": dt.DecicisonTree(),
+          #"Random Forrest": dt.RandomForest(),
+          #"Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
+          #"SVM": svm.SVM(),
+          "AdaBoost": ada_boost.AdaBoost()}
+          #"kNN": knn.KNN(),
+          #"Logistic Regression": lr.LogisticRegression(),
+          #"Neural Network": nn.NeuralNetwork()}
 
 max_string_length = max([len(name) for name in models.keys()])
 
