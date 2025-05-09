@@ -15,14 +15,19 @@ from tqdm import tqdm
 rng = np.random.default_rng(1)
 
 # set model
-# model = ensemble.EnsembleLearner(
-#     ada_boost.AdaBoost()
-# )
+model = ensemble.EnsembleLearner(
+    GDA.QDA(reg_param = 1e-4),
+    GDA.LDA(),
+    svm.SVM(),
+    knn.KNN(),
+    #dt.DecicisonTree(),
+)
 
-model = ada_boost.AdaBoost()
-
-datasets = ["cancer", "diabetes"]
-runs = [100, 1]
+# datasets = ["cancer", "diabetes"]
+# runs = [100, 1]
+datasets = ["cancer"]
+runs = [100]
+ratio = 1
 loss = One_Zero_Loss()
 
 for i, dataset in enumerate(datasets):
@@ -32,7 +37,7 @@ for i, dataset in enumerate(datasets):
     model_size = 0
     data = load_data.Data(dataset, verbose=True)
     for run in tqdm(range(runs[i])):
-        data.split_by_ratio(0.8, 0.2, 0.0, rng)
+        data.split_by_ratio(0.8 * ratio, 0.2, 0.0, rng)
         t_0 = time.perf_counter()
         model.fit(data.train_features, data.train_labels)
         t_1 = time.perf_counter()

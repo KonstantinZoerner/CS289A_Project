@@ -22,6 +22,7 @@ class EnsembleLearner:
     
     def model_size(self):
         size = 0
+        return 0
         for learner in self.learners:
             size += learner.model_size()
         return size

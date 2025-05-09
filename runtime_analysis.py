@@ -35,16 +35,16 @@ ratio_training_data = [1]
 # ratio_training_data = np.array([0.25, 0.5])
 print("ratios:", ratio_training_data)
 
-models = {#"QDA": GDA.QDA(reg_param = 1e-4),
-          #"LDA": GDA.LDA(),
-          #"Decicision Tree": dt.DecicisonTree(),
-          #"Random Forrest": dt.RandomForest(),
-          #"Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
-          #"SVM": svm.SVM(),
-          "AdaBoost": ada_boost.AdaBoost()}
-          #"kNN": knn.KNN(),
-          #"Logistic Regression": lr.LogisticRegression(),
-          #"Neural Network": nn.NeuralNetwork()}
+models = {"QDA": GDA.QDA(reg_param = 1e-4),
+          "LDA": GDA.LDA(),
+          "Decicision Tree": dt.DecicisonTree(),
+          "Random Forrest": dt.RandomForest(),
+          "Random Forrest (No Bootstrap)": dt.RandomForest(bootstrap = False),
+          "SVM": svm.SVM(),
+          "AdaBoost": ada_boost.AdaBoost(),
+          "kNN": knn.KNN(),
+          "Logistic Regression": lr.LogisticRegression(),
+          "Neural Network": nn.NeuralNetwork()}
 
 max_string_length = max([len(name) for name in models.keys()])
 

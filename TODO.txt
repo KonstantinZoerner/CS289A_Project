@@ -1,0 +1,23 @@
+Gut für Diabetes:
+
+model = ensemble.EnsembleLearner(
+    ada_boost.AdaBoost(),
+    dt.RandomForest(), 
+    dt.RandomForest(bootstrap = False),
+    GDA.QDA(reg_param = 1e-4),
+    GDA.LDA(),
+    svm.SVM(),
+    knn.KNN(),
+)
+
+Gutes Ensemble für beide (ohne bereits bestehendes Ensemble)
+
+model = ensemble.EnsembleLearner(
+    GDA.QDA(reg_param = 1e-4),
+    GDA.LDA(),
+    svm.SVM(),
+    knn.KNN(),
+    #dt.DecicisonTree(),
+)
+
+SVM unterschiedlucghe kernel vs size of dataset
