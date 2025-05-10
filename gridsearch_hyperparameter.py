@@ -29,7 +29,10 @@ class HyperparameterTuning:
 
         self.mean_test_scores = []
         for i in tqdm(range(self.runs)):
-            self.data.split_by_ratio(0.8, 0.2, 0, shuffel=True)
+            if self.data.name == "cancer":
+                self.data.split_by_ratio(0.8, 0.2, 0, shuffel=True)
+            else:
+                self.data.split_by_ratio(0.8*0.5, 0.2, 0, shuffel=True)
             grid_search.fit(self.data.train_features , self.data.train_labels)
             self.mean_test_scores.append(grid_search.cv_results_['mean_test_score'])
         
@@ -102,7 +105,13 @@ def tune_SVC(data):
 
 def tune_DecisionTree(data):
     model = DecisionTreeClassifier()
-    tuner = HyperparameterTuning(model, param_grid={'max_depth': range(1, 20)}, data=data, runs=1000)
+    if data.name == "cancer":
+        n_runs = 1000
+    elif data.name == "diabetes":
+        n_runs = 100
+    else:
+        raise NotImplementedError(f"Dataset {data.name} is not implemented")
+    tuner = HyperparameterTuning(model, param_grid={'max_depth': range(1, 20)}, data=data, runs=n_runs)
     tuner.tune_hyperparameters(verbose=True)
     tuner.save_results()
     tuner.plot_results_1D(param_name='max_depth', x_scale='linear')
@@ -112,7 +121,15 @@ def tune_DecisionTree(data):
 
 def tune_RandomForest(data):
     model = RandomForestClassifier()
-    tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200, 300, 400, 500], 'max_depth': range(1, 16)}, data=data, runs=30)
+    if data.name == "cancer":
+        n_runs = 30
+    elif data.name == "diabetes":
+        n_runs = 5
+    else:
+        raise NotImplementedError(f"Dataset {data.name} is not implemented")
+
+    #tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200, 300, 400, 500], 'max_depth': range(1, 16)}, data=data, runs=n_runs)
+    tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200, 300, 400, 500], 'max_depth': range(1, 16, 2)}, data=data, runs=n_runs)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='max_depth', x_scale='linear')
     tuner.plot_results_1D(param_name='n_estimators', x_scale='linear')
@@ -123,12 +140,14 @@ def tune_LogisticRegression(data):
     tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 100, 1000, 10000]}, data=data)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='C', x_scale='log')
+    tuner.save_results()
 
 def tune_KNeighborsClassifier(data):
     model = KNeighborsClassifier()
-    tuner = HyperparameterTuning(model, param_grid={'n_neighbors': range(1, 20)}, data=data)
+    tuner = HyperparameterTuning(model, param_grid={'n_neighbors': range(1, 40,2)}, data=data)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='n_neighbors', x_scale='linear')
+    tuner.save_results()
 
 def tune_AdaBoostClassifier(data):
     model = AdaBoostClassifier()
@@ -142,6 +161,7 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
     data = load_data.Data(dataset="diabetes")
 
-    tune_SVC(data)
-    # tune_DecisionTree(data)
+    #tune_SVC(data)
+    #tune_DecisionTree(data)
     #tune_RandomForest(data)
+    tune_KNeighborsClassifier(data)
