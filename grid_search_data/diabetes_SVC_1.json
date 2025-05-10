@@ -1,0 +1,16 @@
+{
+    "params": [
+        {
+            "C": 10,
+            "kernel": "rbf"
+        }
+    ],
+    "mean_test_scores": [
+        0.8625736051731477
+    ],
+    "best_params": {
+        "C": 10,
+        "kernel": "rbf"
+    },
+    "best_score": 0.8625736051731477
+}

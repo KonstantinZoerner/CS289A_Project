@@ -68,7 +68,7 @@ class HyperparameterTuning:
             if self.data.name == "cancer":
                 self.data.split_by_ratio(0.8, 0.2, 0, shuffel=True)
             else:
-                self.data.split_by_ratio(0.8*0.5, 0.2, 0, shuffel=True)
+                self.data.split_by_ratio(0.8*0.2, 0.2, 0, shuffel=True)
             grid_search.fit(self.data.train_features , self.data.train_labels)
             self.mean_test_scores.append(grid_search.cv_results_['mean_test_score'])
         
@@ -130,7 +130,14 @@ class HyperparameterTuning:
 
 def tune_SVC(data):
     model = SVC()
-    tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 20, 50, 100, 200, 500, 1000], 'kernel': ['linear']}, data=data, runs=10)
+    if data.name == "cancer":
+        n_runs = 10
+    elif data.name == "diabetes":
+        n_runs = 1
+    else:
+        raise NotImplementedError(f"Dataset {data.name} is not implemented")
+    #tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 20, 50, 100, 200, 500, 1000], 'kernel': ['linear']}, data=data, runs=n_runs)
+    tuner = HyperparameterTuning(model, param_grid={'C': [0.1, 1, 10, 20], 'kernel': ['rbf','linear']}, data=data, runs=n_runs)
     tuner.tune_hyperparameters(verbose=True)
     tuner.plot_results_1D(param_name='C', x_scale='log')
     tuner.save_results()
@@ -220,8 +227,8 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
     data = load_data.Data(dataset="diabetes")
 
-    # tune_SVC(data)
+    tune_SVC(data)
     # tune_DecisionTree(data)
     #tune_RandomForest(data)
-    tune_KNeighborsClassifier(data)
+    #tune_KNeighborsClassifier(data)
     #plot_both_trees()
