@@ -76,7 +76,7 @@ class HyperparameterTuning:
         plt.xlabel(param_name)
         plt.ylabel('Mean Accuracy')
         plt.grid(True)
-        plt.savefig(f"grid_search_data/{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
+        plt.savefig(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
         if show:
             plt.show()
         plt.close()
@@ -89,7 +89,7 @@ class HyperparameterTuning:
         "best_score": self.best_score
         }
 
-        with open(f"grid_search_data/{self.name}_{self.runs}.json", "w") as f:
+        with open(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}.json", "w") as f:
             json.dump(results, f, indent=4)
 
 def tune_SVC(data):
@@ -140,7 +140,7 @@ def tune_AdaBoostClassifier(data):
 
 if __name__ == "__main__":
     rng = np.random.default_rng(1)
-    data = load_data.Data(dataset="cancer")
+    data = load_data.Data(dataset="diabetes")
 
     tune_SVC(data)
     # tune_DecisionTree(data)
