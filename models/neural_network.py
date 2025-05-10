@@ -17,26 +17,30 @@ class NeuralNetwork(nn.Module):
         self.device = "cpu"
         self.verbose = verbose
         
-    def fit(self, X, y, epochs=20):
+    def fit(self, X, y, epochs=20, model = None, X_val = None, y_val = None):
         X_tensor = torch.from_numpy(X)
         y_tensor = torch.from_numpy(y)
 
         in_size = X_tensor.shape[1]
         out_size = int(torch.max(y_tensor).item()) + 1
 
-        self.model = nn.Sequential(
-                    nn.Linear(in_size, 16),
-                    nn.BatchNorm1d(16),
-                    nn.ReLU(),
-                    nn.Dropout(0.2),
-                    nn.Linear(16,8),
-                    nn.BatchNorm1d(8),
-                    nn.ReLU(),
-                    nn.Dropout(0.2),
-                    nn.Linear(8,out_size)
-                ).to(self.device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01)
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=1, gamma=0.9)
+        if model == None:
+            self.model = nn.Sequential(
+                        nn.Linear(in_size, 256),
+                        nn.BatchNorm1d(256),
+                        nn.ReLU(),
+                        #nn.Dropout(0.2),
+                        nn.Linear(256,256),
+                        nn.BatchNorm1d(256),
+                        nn.ReLU(),
+                        #nn.Dropout(0.2),
+                        nn.Linear(256,out_size)
+                    ).to(self.device)
+        else:
+            self.model = model.to(self.device)
+
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=5, gamma=0.5)
         self.criterion = torch.nn.CrossEntropyLoss()
             
 
@@ -47,20 +51,32 @@ class NeuralNetwork(nn.Module):
             dataloader = DataLoader(dataset, batch_size=16, shuffle=False, drop_last=True)
 
         self.model.train()
+
+        self.acc_train = []
+        self.acc_val = []
+
+        self.acc_train.append(self.eval(X, y))
+        if X_val is not None:
+                self.acc_val.append(self.eval(X_val, y_val))
+
         for epoch in range(epochs):
             if self.verbose:
                 iterator = tqdm(dataloader, unit="batch")
             else:
                 iterator = dataloader
 
-            for x, y in iterator:
-                x, y = x.float().to(self.device), y.long().to(self.device)
+            for x_batch, y_batch in iterator:
+                x_batch, y_batch = x_batch.float().to(self.device), y_batch.long().to(self.device)
                 self.optimizer.zero_grad() # Remove the gradients from the previous step
-                pred = self.model(x)
-                loss = self.criterion(pred, y)
+                pred = self.model(x_batch)
+                loss = self.criterion(pred, y_batch)
                 loss.backward()
                 self.optimizer.step()
-                self.scheduler.step()
+            self.scheduler.step()
+            
+            self.acc_train.append(self.eval(X, y))
+            if X_val is not None:
+                self.acc_val.append(self.eval(X_val, y_val))
 
     def forward(self, X):
         return self.model(X)
@@ -71,7 +87,8 @@ class NeuralNetwork(nn.Module):
             X_tensor = torch.from_numpy(X).float().to(next(self.model.parameters()).device)
             pred = self.model(X_tensor)
             y_pred = torch.argmax(pred, dim=1)
-
+        
+        self.model.train()
         return  y_pred.cpu().numpy()
     
     def model_size(self):
