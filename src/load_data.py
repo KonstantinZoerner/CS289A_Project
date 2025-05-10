@@ -13,6 +13,8 @@ class Data:
             path = "datasets/diabetes/diabetes_binary_health_indicators_BRFSS2015.csv"
         else:
             raise NotImplementedError("This dataset does not exist")
+        
+        self.name = dataset
 
         # load data
         data = np.genfromtxt(path, delimiter=',', dtype=None)
