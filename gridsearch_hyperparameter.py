@@ -87,7 +87,7 @@ class HyperparameterTuning:
     def plot_results_1D(self, param_name, x_scale='log', 
                         show=False, save=True, close=True, 
                         graph_settings=FULL, filename=None, ax= None, 
-                        label=None):
+                        label=None, yrange=None):
         mpl.rcParams.update(graph_settings)
         if ax is None:
             fig, ax = plt.subplots()
@@ -106,6 +106,8 @@ class HyperparameterTuning:
         ax.set_xscale(x_scale)
         ax.set_xlabel(param_name)
         ax.set_ylabel('Mean Accuracy')
+        if yrange is not None:
+            ax.set_ylim(yrange)
         ax.grid(True)
         if save and filename is None:
             plt.savefig(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
@@ -215,20 +217,25 @@ def plot_both_trees():
     tuner_diabetes.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="trees_combined_(1000,100)", ax=ax1, label="Diabetes")
 
 def plot_both_forests():
-    tuner_cancer = load_past_data("cancer", "grid_search_data/cancer_DecisionTreeClassifier_1000.json")
-    tuner_diabetes = load_past_data("diabetes", "grid_search_data/diabetes_DecisionTreeClassifier_100.json")
+    tuner_cancer = load_past_data("cancer", "grid_search_data/cancer_RandomForestClassifier_30.json")
+    tuner_diabetes = load_past_data("diabetes", "grid_search_data/diabetes_RandomForestClassifier_5.json")
 
     ax1 = tuner_cancer.plot_results_1D(param_name='max_depth', x_scale='linear', show=False, save=False, close=False, label="Breast Cancer")
-    tuner_diabetes.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="trees_combined_(1000,100)", ax=ax1, label="Diabetes")
+    tuner_diabetes.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="forests_combined_max_depth_(30,5)", ax=ax1.twinx(), label="Diabetes", yrange=(0.86, 0.867))
+
+    ax1 = tuner_cancer.plot_results_1D(param_name='n_estimators', x_scale='linear', show=False, save=False, close=False, label="Breast Cancer")
+    tuner_diabetes.plot_results_1D(param_name='n_estimators', x_scale='linear', show=True, save=True, close=True, filename="forests_combined_n_estimators_(30,5)", ax=ax1.twinx(), label="Diabetes")
 
 
 
 if __name__ == "__main__":
-    rng = np.random.default_rng(1)
-    data = load_data.Data(dataset="diabetes")
+    # rng = np.random.default_rng(1)
+    # data = load_data.Data(dataset="diabetes")
 
     tune_SVC(data)
     # tune_DecisionTree(data)
     #tune_RandomForest(data)
-    #tune_KNeighborsClassifier(data)
+    # tune_KNeighborsClassifier(data)
     #plot_both_trees()
+
+    plot_both_forests()
