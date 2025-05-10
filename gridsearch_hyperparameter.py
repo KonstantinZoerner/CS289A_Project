@@ -15,6 +15,42 @@ import json
 import matplotlib as mpl
 from src.utils import sort_np_arrays_by_first_column
 
+# ----------------------------------------------------
+#                       Constants
+# ----------------------------------------------------  
+
+fig_width = 3.25
+fig_height = fig_width * 0.75
+FULL = {
+            "text.usetex": True,
+            "font.family": "serif",
+            "font.size": 10,
+            "axes.labelsize": 10,
+            "axes.titlesize": 10,
+            "legend.fontsize": 8,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "lines.linewidth": 1,
+            "lines.markersize": 4,
+            "figure.figsize": [fig_width, fig_height],
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42
+        }
+HALF = {
+            "text.usetex": True,
+            "font.family": "serif",
+            "font.size": 10,
+            "axes.labelsize": 10,
+            "axes.titlesize": 10,
+            "legend.fontsize": 8,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "lines.linewidth": 1,
+            "lines.markersize": 4,
+            "figure.figsize": [0.5 * fig_width, 0.5 * fig_height],
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42
+        }
 
 class HyperparameterTuning:
     def __init__(self, model, param_grid, data, runs=1):
@@ -45,25 +81,13 @@ class HyperparameterTuning:
         print("Best hyperparameters:", self.best_params)
         print("Best score:", self.best_score)
 
-    def plot_results_1D(self, param_name, x_scale='log', show=False):
-        fig_width = 3.25
-        fig_height = fig_width * 0.75
-        mpl.rcParams.update({
-            "text.usetex": True,
-            "font.family": "serif",
-            "font.size": 10,
-            "axes.labelsize": 10,
-            "axes.titlesize": 10,
-            "legend.fontsize": 8,
-            "xtick.labelsize": 8,
-            "ytick.labelsize": 8,
-            "lines.linewidth": 1,
-            "lines.markersize": 4,
-            "figure.figsize": [fig_width, fig_height],
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42
-        })
-
+    def plot_results_1D(self, param_name, x_scale='log', 
+                        show=False, save=True, close=True, 
+                        graph_settings=FULL, filename=None, ax= None, 
+                        label=None):
+        mpl.rcParams.update(graph_settings)
+        if ax is None:
+            fig, ax = plt.subplots()
 
         param = [params[param_name] for params in self.params]
 
@@ -71,15 +95,24 @@ class HyperparameterTuning:
         avg_scores = [np.mean([self.mean_test_scores[i] for i in range(len(param)) if param[i] == up]) for up in unique_params]
         unique_params, avg_scores = sort_np_arrays_by_first_column(np.array(unique_params), np.array(avg_scores))
 
-        plt.plot(unique_params, avg_scores, marker='o')
-        plt.xscale(x_scale)
-        plt.xlabel(param_name)
-        plt.ylabel('Mean Accuracy')
-        plt.grid(True)
-        plt.savefig(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
+        if label is None:
+            label = "--"
+        ax.plot(unique_params, avg_scores, marker='o', label=label)
+        if label is not None:
+            ax.legend()
+        ax.set_xscale(x_scale)
+        ax.set_xlabel(param_name)
+        ax.set_ylabel('Mean Accuracy')
+        ax.grid(True)
+        if save and filename is None:
+            plt.savefig(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}_{param_name}.pdf", bbox_inches='tight')
+        elif save and filename is not None:
+            plt.savefig(f"grid_search_data/{filename}.pdf", bbox_inches='tight')
         if show:
             plt.show()
-        plt.close()
+        if close:
+            plt.close()
+        return ax
 
     def save_results(self):
         results = {
@@ -138,10 +171,37 @@ def tune_AdaBoostClassifier(data):
     tuner.plot_results_1D(param_name='learning_rate', x_scale='linear')
     tuner.save_results()
 
-if __name__ == "__main__":
-    rng = np.random.default_rng(1)
-    data = load_data.Data(dataset="diabetes")
+def load_past_data(dataset, file_path):
+    with open(file_path, "r") as f:
+        data = json.load(f)
+    tuner = HyperparameterTuning(dataset, None, None)
+    tuner.mean_test_scores = np.array(data["mean_test_scores"])
+    tuner.params = data["params"]
+    tuner.best_params = data["best_params"]
+    tuner.best_score = data["best_score"]
+    return tuner
 
-    tune_SVC(data)
+def plot_both_trees():
+    tuner_cancer = load_past_data("cancer", "grid_search_data/cancer_DecisionTreeClassifier_1000.json")
+    tuner_diabetes = load_past_data("diabetes", "grid_search_data/diabetes_DecisionTreeClassifier_100.json")
+
+    ax1 = tuner_cancer.plot_results_1D(param_name='max_depth', x_scale='linear', show=False, save=False, close=False, label="Breast Cancer")
+    tuner_diabetes.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="trees_combined_(1000,100)", ax=ax1, label="Diabetes")
+
+def plot_both_forests():
+    tuner_cancer = load_past_data("cancer", "grid_search_data/cancer_DecisionTreeClassifier_1000.json")
+    tuner_diabetes = load_past_data("diabetes", "grid_search_data/diabetes_DecisionTreeClassifier_100.json")
+
+    ax1 = tuner_cancer.plot_results_1D(param_name='max_depth', x_scale='linear', show=False, save=False, close=False, label="Breast Cancer")
+    tuner_diabetes.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="trees_combined_(1000,100)", ax=ax1, label="Diabetes")
+
+
+
+if __name__ == "__main__":
+    # rng = np.random.default_rng(1)
+    # data = load_data.Data(dataset="diabetes")
+
+    # tune_SVC(data)
     # tune_DecisionTree(data)
     #tune_RandomForest(data)
+    plot_both_trees()
