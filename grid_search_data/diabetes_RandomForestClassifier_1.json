@@ -1,0 +1,91 @@
+{
+    "params": [
+        {
+            "max_depth": 1,
+            "n_estimators": 10
+        },
+        {
+            "max_depth": 1,
+            "n_estimators": 100
+        },
+        {
+            "max_depth": 1,
+            "n_estimators": 300
+        },
+        {
+            "max_depth": 1,
+            "n_estimators": 500
+        },
+        {
+            "max_depth": 5,
+            "n_estimators": 10
+        },
+        {
+            "max_depth": 5,
+            "n_estimators": 100
+        },
+        {
+            "max_depth": 5,
+            "n_estimators": 300
+        },
+        {
+            "max_depth": 5,
+            "n_estimators": 500
+        },
+        {
+            "max_depth": 9,
+            "n_estimators": 10
+        },
+        {
+            "max_depth": 9,
+            "n_estimators": 100
+        },
+        {
+            "max_depth": 9,
+            "n_estimators": 300
+        },
+        {
+            "max_depth": 9,
+            "n_estimators": 500
+        },
+        {
+            "max_depth": 13,
+            "n_estimators": 10
+        },
+        {
+            "max_depth": 13,
+            "n_estimators": 100
+        },
+        {
+            "max_depth": 13,
+            "n_estimators": 300
+        },
+        {
+            "max_depth": 13,
+            "n_estimators": 500
+        }
+    ],
+    "mean_test_scores": [
+        0.8605033900164745,
+        0.8605033900164745,
+        0.8605033900164745,
+        0.8605033900164745,
+        0.8607399072996259,
+        0.8614987425665579,
+        0.8615283084409366,
+        0.8614001941841721,
+        0.8648001648494406,
+        0.8650465430893144,
+        0.8654703083203638,
+        0.8652830628004355,
+        0.8636175454132943,
+        0.8657955076876446,
+        0.865923620487627,
+        0.8662291222211612
+    ],
+    "best_params": {
+        "max_depth": 13,
+        "n_estimators": 500
+    },
+    "best_score": 0.8662291222211612
+}
