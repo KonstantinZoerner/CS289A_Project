@@ -35,7 +35,7 @@ def generate_latex_table_full(cancer_path, diabetes_path, cancer_ratio, diabetes
     ]
 
     for model_name, row in combined.iterrows():
-        if data == "cancer":
+        if data == "error":
             factor = 100
         elif data == "training_time":
             factor = 1000
@@ -60,11 +60,11 @@ def generate_latex_table_full(cancer_path, diabetes_path, cancer_ratio, diabetes
 
 # Example usage:
 latex_code = generate_latex_table_full(
-    cancer_path="analysis_data/runtime_analysis_cancer_100_runs_[0.05-1.0, 0.5].csv",
-    diabetes_path="analysis_data/runtime_analysis_tuned_diabetes_[0.01, 0.105, 0.005]_100.csv",
-    cancer_ratio=1,
-    diabetes_ratio = 0.01,
-    decimal_places = 1,
+    cancer_path="analysis_data/runtime_analysis_nacht_tuned_cancer_log[-1, 0, 100]_100.csv",
+    diabetes_path="analysis_data/runtime_analysis_nacht_tuned_diabetes_log[-3_5, 0, 100]_10.csv",
+    cancer_ratio=1.0,
+    diabetes_ratio = 1.0,
+    decimal_places = 2,
     label = r"Training Time [ms]",
     #label = r"Error [\%]",
     data = "training_time"
