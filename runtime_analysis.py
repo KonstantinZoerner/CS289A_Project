@@ -8,7 +8,7 @@ import models.knn as knn
 import models.svm as svm
 import models.ada_boost as ada_boost
 import models.logistic_regression as lr
-import models.neural_network as nn
+# import models.neural_network as nn
 from src.losses import One_Zero_Loss
 import os
 from tqdm import tqdm
@@ -27,14 +27,15 @@ STD_MODELS = {"QDA": GDA.QDA(reg_param = 1e-4),
           "AdaBoost": ada_boost.AdaBoost(),
           "kNN": knn.KNN(),
           "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()}
+          #"Neural Network": nn.NeuralNetwork()
+          }
 
 #-------------------------------------------------------------
 #                           Main
 #-------------------------------------------------------------
 
 def analyze(models = STD_MODELS, datasets = ["cancer"], ratio_training_data = [1], runs = 100, 
-            name = "cancer_100_runs_[1]_AdaBoost", load_data = False, save_data = True):
+            name = "cancer_100_runs_[1]_AdaBoost", load_old_data = False, save_data = True):
     filename = "runtime_analysis_" + name
     max_string_length = max([len(name) for name in models.keys()])
     rng = np.random.default_rng(1)
@@ -69,7 +70,7 @@ def analyze(models = STD_MODELS, datasets = ["cancer"], ratio_training_data = [1
                         new_runtime_results.loc[(dataset, ratio, name), "model_size"] += (model.model_size())/runs
 
 
-    if os.path.exists("analysis_data/{FILENAME}.csv") and load_data:
+    if os.path.exists("analysis_data/{FILENAME}.csv") and load_old_data:
         old_runtime_results = pd.read_csv("analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
         runtime_results = pd.concat([old_runtime_results, new_runtime_results])
         runtime_results = runtime_results.drop_duplicates(keep="last")
@@ -90,17 +91,20 @@ if __name__ == "__main__":
           "AdaBoost": ada_boost.AdaBoost(n_estimators=100),
           "kNN": knn.KNN(n_neighbors=4),
           "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()}
+          #"Neural Network": nn.NeuralNetwork()
+          }
     
     models_diabetes = {"QDA": GDA.QDA(reg_param = 1e-4),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(max_depth=5),
           "Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
-          "SVM": svm.non_linear_SVM(C=20, kernel="rbf"),
+          #"SVM": svm.non_linear_SVM(C=1, kernel="rbf"),
           "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
           "kNN": knn.KNN(n_neighbors=21),
           "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()}
+          #"Neural Network": nn.NeuralNetwork()
+          }
     
-    analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=[1], runs=1, name="tuned_cancer_100_runs_[1]_AdaBoost", load_data=False, save_data=True)
-    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=1, name="tuned_diabetes_100_runs_[1]_AdaBoost", load_data=False, save_data=True)
+    analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=range(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=100, name="tuned_diabetes_[0.1]_100", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=range(0.01, 0.105, 0.005), runs=10, name="tuned_diabetes_[0.01, 0.105, 0.005]_100", load_old_data=False, save_data=True)
