@@ -8,7 +8,7 @@ torch.manual_seed(1)
 torch.cuda.manual_seed(1)
 
 class NeuralNetwork(nn.Module):
-    def __init__(self, verbose = False):
+    def __init__(self, verbose = False, epochs = 20):
         super().__init__()
         self.model = None  # will be created during fit
         self.optimizer = None
@@ -16,8 +16,9 @@ class NeuralNetwork(nn.Module):
         self.criterion = nn.CrossEntropyLoss()
         self.device = "cpu"
         self.verbose = verbose
+        self.epochs = epochs
         
-    def fit(self, X, y, epochs=20, model = None, X_val = None, y_val = None):
+    def fit(self, X, y, model = None, X_val = None, y_val = None):
         X_tensor = torch.from_numpy(X)
         y_tensor = torch.from_numpy(y)
 
@@ -29,9 +30,11 @@ class NeuralNetwork(nn.Module):
                         nn.Linear(in_size, 256),
                         nn.BatchNorm1d(256),
                         nn.ReLU(),
+                        #nn.Dropout(0.2),
                         nn.Linear(256,256),
                         nn.BatchNorm1d(256),
                         nn.ReLU(),
+                        #nn.Dropout(0.2),
                         nn.Linear(256,out_size)
                     ).to(self.device)
         else:
@@ -57,7 +60,7 @@ class NeuralNetwork(nn.Module):
         if X_val is not None:
                 self.acc_val.append(self.eval(X_val, y_val))
 
-        for epoch in tqdm(range(epochs), unit="batch"):
+        for epoch in range(self.epochs):
             if self.verbose:
                 iterator = tqdm(dataloader, unit="batch", leave=False)
             else:

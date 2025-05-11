@@ -91,7 +91,7 @@ if __name__ == "__main__":
           "AdaBoost": ada_boost.AdaBoost(n_estimators=100),
           "kNN": knn.KNN(n_neighbors=4),
           "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()
+          "Neural Network": nn.NeuralNetwork(epochs = 20)
           }
     
     models_diabetes = {"QDA": GDA.QDA(reg_param = 1e-4),
@@ -102,9 +102,9 @@ if __name__ == "__main__":
           "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
           "kNN": knn.KNN(n_neighbors=21),
           "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork()
+          "Neural Network": nn.NeuralNetwork(epochs=2)
           }
     
-    analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=range(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
+    analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.arange(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
     analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=100, name="tuned_diabetes_[0.1]_100", load_old_data=False, save_data=True)
-    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=range(0.01, 0.105, 0.005), runs=10, name="tuned_diabetes_[0.01, 0.105, 0.005]_100", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.arange(0.01, 0.105, 0.005), runs=10, name="tuned_diabetes_[0.01, 0.105, 0.005]_100", load_old_data=False, save_data=True)

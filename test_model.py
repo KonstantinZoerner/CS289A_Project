@@ -20,9 +20,9 @@ model = nn.NeuralNetwork(verbose=True)
 
 # datasets = ["cancer", "diabetes"]
 # runs = [100, 1]
-datasets = ["diabetes"]
+datasets = ["cancer"]
 runs = [1]
-ratio = 0.5
+ratio = 1
 loss = One_Zero_Loss()
 
 for i, dataset in enumerate(datasets):
@@ -34,7 +34,7 @@ for i, dataset in enumerate(datasets):
     for run in tqdm(range(runs[i])):
         data.split_by_ratio(0.8 * ratio, 0.2, 0.0, rng)
         t_0 = time.perf_counter()
-        model.fit(data.train_features, data.train_labels, epochs=10, model=None,X_val=data.val_features,y_val=data.val_labels)
+        model.fit(data.train_features, data.train_labels, epochs=20, model=None,X_val=data.val_features,y_val=data.val_labels)
         t_1 = time.perf_counter()
         y_pred = model.predict(data.val_features)  
         t_2 = time.perf_counter()
