@@ -29,11 +29,9 @@ class NeuralNetwork(nn.Module):
                         nn.Linear(in_size, 256),
                         nn.BatchNorm1d(256),
                         nn.ReLU(),
-                        #nn.Dropout(0.2),
                         nn.Linear(256,256),
                         nn.BatchNorm1d(256),
                         nn.ReLU(),
-                        #nn.Dropout(0.2),
                         nn.Linear(256,out_size)
                     ).to(self.device)
         else:
@@ -46,7 +44,7 @@ class NeuralNetwork(nn.Module):
 
         dataset = TensorDataset(X_tensor, y_tensor)
         if y_tensor.shape[0] >= 10000:
-            dataloader = DataLoader(dataset, batch_size=512, shuffle=False, drop_last=True)
+            dataloader = DataLoader(dataset, batch_size=1024, shuffle=False, drop_last=True)
         else:
             dataloader = DataLoader(dataset, batch_size=16, shuffle=False, drop_last=True)
 
@@ -59,9 +57,9 @@ class NeuralNetwork(nn.Module):
         if X_val is not None:
                 self.acc_val.append(self.eval(X_val, y_val))
 
-        for epoch in range(epochs):
+        for epoch in tqdm(range(epochs), unit="batch"):
             if self.verbose:
-                iterator = tqdm(dataloader, unit="batch")
+                iterator = tqdm(dataloader, unit="batch", leave=False)
             else:
                 iterator = dataloader
 
