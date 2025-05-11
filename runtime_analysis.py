@@ -103,4 +103,4 @@ if __name__ == "__main__":
           "Neural Network": nn.NeuralNetwork()}
     
     analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=[1], runs=1, name="tuned_cancer_100_runs_[1]_AdaBoost", load_data=False, save_data=True)
-    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[1], runs=1, name="tuned_diabetes_100_runs_[1]_AdaBoost", load_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=1, name="tuned_diabetes_100_runs_[1]_AdaBoost", load_data=False, save_data=True)
