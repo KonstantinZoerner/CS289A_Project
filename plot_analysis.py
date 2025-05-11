@@ -4,18 +4,18 @@ import pandas as pd
 import src.utils as utils
 
 model_to_color = {
-    "QDA": "#1f77b4",     # Blue
-    "LDA": "#ff7f0e",     # Orange
-    "Decision Tree": "#2ca02c",  # Green
-    "Decicision Tree": "#2ca02c",  # Green (typo correction)
-    "Random Forest": "#d62728",  # Red
-    "Random Forrest": "#d62728",  # Red (typo correction)
-    "Random Forest (No Bootstrap)": "#9467bd",  # Purple
-    "SVM": "#8c564b",     # Brown
-    "AdaBoost": "#e377c2",  # Pink
-    "kNN": "#7f7f7f",     # Gray
-    "Logistic Regression": "#17becf",  # Cyan
-    "Neural Network": "#000000",  # Black
+    "QDA": "C0",     
+    "LDA": "C1",     
+    "Decision Tree": "C2",  
+    "Decicision Tree": "C2",  
+    "Random Forest": "C3",  
+    "Random Forrest": "C3",  
+    "Random Forest (No Bootstrap)": "C4",  
+    "SVM": "C5",     
+    "AdaBoost": "C6",  
+    "kNN": "C7",     
+    "Logistic Regression": "C8",  
+    "Neural Network": "C9",  
 }
 
 fig_width = 3.25
@@ -83,7 +83,8 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
         l = "l"
     else:
         l = ""
-    plt.grid()
+    plt.grid(which='both', axis='y')
+    plt.grid(which='major', axis='x')
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     # NO titles to comply with ICML format guidelines
@@ -148,7 +149,7 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
         l = "l"
     else:
         l = ""
-    plt.grid()
+    plt.grid(which="both")
     plt.xlabel("Ratio of used Training Data")
     plt.ylabel(y_label)
     # No plot title to comply with ICML format guidelines
