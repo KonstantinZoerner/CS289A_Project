@@ -53,7 +53,7 @@ def analyze(models = STD_MODELS, datasets = ["cancer"], ratio_training_data = [1
             model_size = 0
             progress_bar = tqdm(range(runs))
             for i in progress_bar:
-                data.split_by_ratio(0.8*ratio, 0.2, 0.0, rng)
+                data.split_by_ratio(0.8*ratio, 0.19, 0.0, rng)
                 for name, model in models.items():
                     progress_bar.set_description(f"Analyzing {dataset} with {name}" + " "* (max_string_length - len(name)) + f" (ratio: {ratio:.2f})")
                     t_0 = time.perf_counter()
