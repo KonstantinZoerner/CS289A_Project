@@ -97,16 +97,16 @@ if __name__ == "__main__":
     models_diabetes = {"QDA": GDA.QDA(),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(max_depth=6),
-          "Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
+          "Random Forrest": dt.RandomForest(max_depth=9, n_estimators=200),
           #"SVM": svm.non_linear_SVM(C=1, kernel="rbf"),
-          "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
-          "kNN": knn.KNN(n_neighbors=21),
+          "AdaBoost": ada_boost.AdaBoost(n_estimators=20),
+          "kNN": knn.KNN(n_neighbors=29),
           "Logistic Regression": lr.LogisticRegression(),
           "Neural Network": nn.NeuralNetwork(epochs=2)
           }
     
-    #cancer50_50
-    analyze(models=models_diabetes, datasets=["diabetes_50_50"], ratio_training_data=[1.0], runs=1, name="tuned_diabetes_[1]_100", load_old_data=False, save_data=True)
+    #diabetes_50_50
+    analyze(models=models_diabetes, datasets=["diabetes_50_50"], ratio_training_data=np.logspace(-3, 0, 50), runs=10, name="tuned_diabetes_log[-3,0,50]_10", load_old_data=False, save_data=True)
 
     #cancer
     #analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.logspace(-1, 0, 100), runs=100, name="nacht_tuned_cancer_log[-1, 0, 100]_100", load_old_data=False, save_data=True)
