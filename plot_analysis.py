@@ -85,7 +85,7 @@ HALF = {
     }
 
 # NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
-NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
+NAME = "nacht_tuned_diabetes_log[-1, 0, 50]_100"
 FILENAME = "runtime_analysis_" + NAME
 
 # ------------------------------------------------------------
@@ -200,15 +200,15 @@ def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
 
 
 if __name__ == "__main__":
-    NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
+    NAME = "nacht_tuned_diabetes_log[-3_5, 0, 100]_10"
     FILENAME = "runtime_analysis_" + NAME
-    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
-    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True, y_scale="linear")
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False, y_scale="linear")
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=True)
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=False)
 
 
-    NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
+    NAME = "nacht_tuned_cancer_log[-1, 0, 100]_100"
     FILENAME = "runtime_analysis_" + NAME
     plot_error_vs_training_data_ratio(dataset="cancer", legend=True, y_scale="log", x_scale="log")
     plot_error_vs_training_data_ratio(dataset="cancer", legend=False, y_scale="log", x_scale="log")

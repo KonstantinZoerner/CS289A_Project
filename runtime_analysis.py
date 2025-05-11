@@ -18,7 +18,7 @@ import warnings
 #                           Settings
 #-------------------------------------------------------------
 warnings.filterwarnings("ignore")
-STD_MODELS = {"QDA": GDA.QDA(reg_param = 1e-4),
+STD_MODELS = {"QDA": GDA.QDA(),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(),
           "Random Forrest": dt.RandomForest(),
@@ -83,7 +83,7 @@ def analyze(models = STD_MODELS, datasets = ["cancer"], ratio_training_data = [1
         runtime_results.to_csv(f"analysis_data/{filename}.csv")
 
 if __name__ == "__main__":
-    models_cancer = {"QDA": GDA.QDA(reg_param = 1e-4),
+    models_cancer = {"QDA": GDA.QDA(),
           "LDA": GDA.LDA(),
           "Decicision Tree": dt.DecicisonTree(max_depth=4),
           "Random Forrest": dt.RandomForest(max_depth=7, n_estimators=100),
@@ -94,18 +94,22 @@ if __name__ == "__main__":
           "Neural Network": nn.NeuralNetwork(epochs = 20)
           }
     
-    models_diabetes = {"QDA": GDA.QDA(reg_param = 1e-4),
-          "LDA": GDA.LDA(),
-          "Decicision Tree": dt.DecicisonTree(max_depth=5),
-          "Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
+    models_diabetes = {"QDA": GDA.QDA(),
+          #"LDA": GDA.LDA(),
+          #"Decicision Tree": dt.DecicisonTree(max_depth=5),
+          #"Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
           #"SVM": svm.non_linear_SVM(C=1, kernel="rbf"),
-          "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
-          "kNN": knn.KNN(n_neighbors=21),
-          "Logistic Regression": lr.LogisticRegression(),
-          "Neural Network": nn.NeuralNetwork(epochs=2)
+          #"AdaBoost": ada_boost.AdaBoost(n_estimators=30),
+          #"kNN": knn.KNN(n_neighbors=21),
+          #"Logistic Regression": lr.LogisticRegression(),
+          #"Neural Network": nn.NeuralNetwork(epochs=2)
           }
     
     #analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.arange(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
+    
+    #analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.logspace(-1, 0, 100), runs=100, name="nacht_tuned_cancer_log[-1, 0, 100]_100", load_old_data=False, save_data=True)
     #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=100, name="tuned_diabetes_[0.1]_100", load_old_data=False, save_data=True)
-    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[1.0], runs=100, name="tuned_diabetes_[1]_100", load_old_data=False, save_data=True)
-    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.arange(0.0005, 0.01, 0.0005), runs=10, name="tuned_diabetes_[0.0005, 0.001, 0.0005]_10", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[1.0], runs=1, name="tuned_diabetes_[1]_100", load_old_data=False, save_data=True)
+    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.logspace(-1, 0, 50), runs=10, name="nacht_tuned_diabetes_log[-1, 0, 50]_100", load_old_data=False, save_data=True)
+    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.logspace(-3.5, -1, 50), runs=10, name="nacht_tuned_diabetes_log[-3_5, -1, 50]_100", load_old_data=False, save_data=True)
+    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.arange(0.0005, 0.01, 0.0005), runs=10, name="tuned_diabetes_[0.0005, 0.001, 0.0005]_10", load_old_data=False, save_data=True)
