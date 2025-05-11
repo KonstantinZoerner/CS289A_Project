@@ -3,6 +3,40 @@ import matplotlib as mpl
 import pandas as pd 
 import src.utils as utils
 
+fig_width = 3.25
+fig_height = fig_width * 0.75
+FULL = {
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.size": 10,
+        "axes.labelsize": 10,
+        "axes.titlesize": 10,
+        "legend.fontsize": 8,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "lines.linewidth": 1,
+        "lines.markersize": 4,
+        "figure.figsize": [fig_width, fig_height],
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42
+    }
+
+HALF = {
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.size": 10,
+        "axes.labelsize": 10,
+        "axes.titlesize": 10,
+        "legend.fontsize": 8,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "lines.linewidth": 1,
+        "lines.markersize": 4,
+        "figure.figsize": [0.5*fig_width, 0.5*fig_height],
+        "pdf.fonttype": 42,
+        "ps.fonttype": 42
+    }
+
 # NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
 NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
 FILENAME = "runtime_analysis_" + NAME
@@ -13,7 +47,8 @@ FILENAME = "runtime_analysis_" + NAME
 def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error", 
                          models=None, remove_modles=None, 
                          x_label="Number of Parameters", y_label="Error",
-                         title=None, x_scale="log", y_scale="log", train_ratio=1.0):
+                         title=None, x_scale="log", y_scale="log", train_ratio=1.0, figure_settings=FULL,
+                         legend=False):
     
     runtime_results = pd.read_csv(f"analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
     if models is None:
@@ -24,18 +59,25 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
     y_data = runtime_results.loc[(dataset, train_ratio, models), y].to_numpy()
     
     # plot
+    mpl.rcParams.update(figure_settings)
+
     for (y_data, complexity, label) in zip(y_data, x_data, models):
         plt.scatter(complexity, y_data, label=label)
-    plt.legend()
+    if legend:
+        plt.legend()
+        l = "l"
+    else:
+        l = ""
     plt.xlabel(x_label)
     plt.ylabel(y_label)
-    if type(title) == str:
-        plt.title(title)
-    elif title is not None:
-        plt.title(f"{x_label} vs {y_label} for {dataset} dataset")
+    # NO titles to comply with ICML format guidelines
+    # if type(title) == str:
+    #     plt.title(title)
+    # elif title is not None:
+    #     plt.title(f"{x_label} vs {y_label} for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
-    plt.savefig(f"figures/{x}_vs_{y}_{dataset}_{NAME}.pdf", bbox_inches="tight")
+    plt.savefig(f"figures/{x}_vs_{y}_{dataset}_{NAME}{l}.pdf", bbox_inches="tight")
     plt.show()
 
 def plot_model_complexity_vs_accuracy(dataset="diabetes"):
@@ -43,10 +85,10 @@ def plot_model_complexity_vs_accuracy(dataset="diabetes"):
                          x_label="Number of Parameters", y_label="Error",
                          title=True)
 
-def plot_runtime_vs_accuracy(dataset="diabetes"):
+def plot_runtime_vs_accuracy(dataset="diabetes", **kwargs):
     plot_analysis_x_vs_y(dataset=dataset, x="training_time", y="error",
                          x_label="Training Time (s)", y_label="Error",
-                         title=True)
+                         title=True, **kwargs)
 
 def plot_runtime_vs_model_complexity(dataset="diabetes"):
     plot_analysis_x_vs_y(dataset=dataset, x="training_time", y="model_size",
@@ -64,7 +106,7 @@ def plot_runtime_vs_predict_time(dataset="diabetes"):
 def plot_x_vs_training_data_ratio(dataset="diabetes", y="error", 
                          models=None, remove_models=None, y_label="Error",
                          title=None, x_scale="log", y_scale="linear", 
-                         train_ratios=None, remove_ratios=None):
+                         train_ratios=None, remove_ratios=None, figure_settings=FULL, legend=False):
 
     runtime_results = pd.read_csv(f"analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
     if models is None:
@@ -78,30 +120,18 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
          
     # plot
     print("models", models)
-    fig_width = 3.25
-    fig_height = fig_width * 0.75
-    mpl.rcParams.update({
-        "text.usetex": True,
-        "font.family": "serif",
-        "font.size": 10,
-        "axes.labelsize": 10,
-        "axes.titlesize": 10,
-        "legend.fontsize": 8,
-        "xtick.labelsize": 8,
-        "ytick.labelsize": 8,
-        "lines.linewidth": 1,
-        "lines.markersize": 4,
-        "figure.figsize": [fig_width, fig_height],
-        "pdf.fonttype": 42,
-        "ps.fonttype": 42
-    })
+    mpl.rcParams.update(figure_settings)
 
     for i, label in enumerate(models):
         y_data = runtime_results.loc[(dataset, train_ratios, label), y].to_numpy()
         sorted_train_ratios, sorted_y_data = utils.sort_np_arrays_by_first_column(train_ratios, y_data)
         
         plt.plot(sorted_train_ratios, sorted_y_data, label=label)
-    plt.legend()
+    if legend:
+        plt.legend()
+        l = "l"
+    else:
+        l = ""
     plt.xlabel("Ratio of used Training Data")
     plt.ylabel(y_label)
     # No plot title to comply with ICML format guidelines
@@ -111,7 +141,7 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
     #    plt.title(f"{y_label} vs Ratio of used Training Data for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
-    plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}_{NAME}.pdf", bbox_inches="tight")
+    plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}_{NAME}{l}.pdf", bbox_inches="tight")
     plt.show()
 
 def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
@@ -120,9 +150,17 @@ def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
 
 
 if __name__ == "__main__":
-    # plot_model_complexity_vs_accuracy()
-    # plot_runtime_vs_accuracy(dataset="cancer")
-    # plot_runtime_vs_model_complexity()
-    # plot_runtime_vs_predict_time()
-    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear")
-    # plot_runtime_vs_accuracy(dataset="cancer")
+    NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
+    FILENAME = "runtime_analysis_" + NAME
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False)
+
+
+    NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
+    FILENAME = "runtime_analysis_" + NAME
+    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=True)
+    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=False)
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=False)
