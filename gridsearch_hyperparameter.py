@@ -134,7 +134,7 @@ def tune_SVC(data):
     model = SVC()
     if data.name == "cancer":
         n_runs = 10
-    elif data.name == "diabetes":
+    elif data.name == "diabetes" or data.name == "diabetes_50_50":
         n_runs = 1
     else:
         raise NotImplementedError(f"Dataset {data.name} is not implemented")
@@ -149,7 +149,7 @@ def tune_DecisionTree(data):
     model = DecisionTreeClassifier()
     if data.name == "cancer":
         n_runs = 1000
-    elif data.name == "diabetes":
+    elif data.name == "diabetes" or data.name == "diabetes_50_50":
         n_runs = 100
     else:
         raise NotImplementedError(f"Dataset {data.name} is not implemented")
@@ -165,7 +165,7 @@ def tune_RandomForest(data):
     model = RandomForestClassifier()
     if data.name == "cancer":
         n_runs = 30
-    elif data.name == "diabetes":
+    elif data.name == "diabetes" or data.name == "diabetes_50_50":
         n_runs = 5
     else:
         raise NotImplementedError(f"Dataset {data.name} is not implemented")
@@ -196,7 +196,7 @@ def tune_AdaBoostClassifier(data, depth=2):
     model = RandomForestClassifier()
     if data.name == "cancer":
         n_runs = 10
-    elif data.name == "diabetes":
+    elif data.name == "diabetes" or data.name == "diabetes_50_50":
         n_runs = 10
     else:
         raise NotImplementedError(f"Dataset {data.name} is not implemented")
@@ -239,12 +239,12 @@ def plot_both_forests():
 
 if __name__ == "__main__":
     rng = np.random.default_rng(1)
-    data = load_data.Data(dataset="diabetes")
+    data = load_data.Data(dataset="diabetes_50_50")
 
     # tune_SVC(data)
-    # tune_DecisionTree(data)
+    tune_DecisionTree(data)
     # tune_RandomForest(data)
     # tune_KNeighborsClassifier(data)
     # plot_both_trees()
     # plot_both_forests()
-    tune_AdaBoostClassifier(data, 2)
+    #tune_AdaBoostClassifier(data, 2)

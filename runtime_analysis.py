@@ -95,14 +95,14 @@ if __name__ == "__main__":
           }
     
     models_diabetes = {"QDA": GDA.QDA(),
-          #"LDA": GDA.LDA(),
-          #"Decicision Tree": dt.DecicisonTree(max_depth=5),
-          #"Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
+          "LDA": GDA.LDA(),
+          "Decicision Tree": dt.DecicisonTree(max_depth=5),
+          "Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
           #"SVM": svm.non_linear_SVM(C=1, kernel="rbf"),
-          #"AdaBoost": ada_boost.AdaBoost(n_estimators=30),
-          #"kNN": knn.KNN(n_neighbors=21),
-          #"Logistic Regression": lr.LogisticRegression(),
-          #"Neural Network": nn.NeuralNetwork(epochs=2)
+          "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
+          "kNN": knn.KNN(n_neighbors=21),
+          "Logistic Regression": lr.LogisticRegression(),
+          "Neural Network": nn.NeuralNetwork(epochs=2)
           }
     
     #cancer50_50
