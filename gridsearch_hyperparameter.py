@@ -19,6 +19,7 @@ from src.utils import sort_np_arrays_by_first_column
 #                       Constants
 # ----------------------------------------------------  
 
+DIABETES_RATIO = 0.2
 fig_width = 3.25
 fig_height = fig_width * 0.75
 FULL = {
@@ -68,7 +69,7 @@ class HyperparameterTuning:
             if self.data.name == "cancer":
                 self.data.split_by_ratio(0.8, 0.2, 0, shuffel=True)
             else:
-                self.data.split_by_ratio(0.8*0.2, 0.2, 0, shuffel=True)
+                self.data.split_by_ratio(0.8*DIABETES_RATIO, 0.2, 0, shuffel=True)
             grid_search.fit(self.data.train_features , self.data.train_labels)
             self.mean_test_scores.append(grid_search.cv_results_['mean_test_score'])
         
@@ -98,8 +99,6 @@ class HyperparameterTuning:
         avg_scores = [np.mean([self.mean_test_scores[i] for i in range(len(param)) if param[i] == up]) for up in unique_params]
         unique_params, avg_scores = sort_np_arrays_by_first_column(np.array(unique_params), np.array(avg_scores))
 
-        if label is None:
-            label = "--"
         ax.plot(unique_params, avg_scores, marker='o', label=label)
         if label is not None:
             ax.legend()
@@ -119,15 +118,16 @@ class HyperparameterTuning:
             plt.close()
         return ax
 
-    def save_results(self):
+    def save_results(self, filename=None):
         results = {
         "params": self.params,
         "mean_test_scores": self.mean_test_scores.tolist(),
         "best_params": self.best_params,
         "best_score": self.best_score
         }
-
-        with open(f"grid_search_data/{self.data.name}_{self.name}_{self.runs}.json", "w") as f:
+        if filename is None:
+            filename = f"{self.data.name}_{self.name}_{self.runs}"
+        with open(f"grid_search_data/{filename}.json", "w") as f:
             json.dump(results, f, indent=4)
 
 def tune_SVC(data):
@@ -191,13 +191,22 @@ def tune_KNeighborsClassifier(data):
     tuner.plot_results_1D(param_name='n_neighbors', x_scale='linear')
     tuner.save_results()
 
-def tune_AdaBoostClassifier(data):
-    model = AdaBoostClassifier()
-    tuner = HyperparameterTuning(model, param_grid={'n_estimators': [10, 50, 100, 200], 'learning_rate': [0.01, 0.1, 1, 10]}, data=data)
+def tune_AdaBoostClassifier(data, depth=2):
+    filename=f"Addaboost_Diabetes_{depth}_few_estimators"
+    model = RandomForestClassifier()
+    if data.name == "cancer":
+        n_runs = 10
+    elif data.name == "diabetes":
+        n_runs = 10
+    else:
+        raise NotImplementedError(f"Dataset {data.name} is not implemented")
+    
+    model = AdaBoostClassifier(estimator=DecisionTreeClassifier(max_depth=depth))
+    tuner = HyperparameterTuning(model, param_grid={'n_estimators': range(1, 41)},
+                                data=data, runs=n_runs)
     tuner.tune_hyperparameters(verbose=True)
-    tuner.plot_results_1D(param_name='n_estimators', x_scale='linear')
-    tuner.plot_results_1D(param_name='learning_rate', x_scale='linear')
-    tuner.save_results()
+    tuner.plot_results_1D(param_name='n_estimators', x_scale='linear', filename=filename)
+    tuner.save_results(filename=filename)
 
 def load_past_data(dataset, file_path):
     with open(file_path, "r") as f:
@@ -229,13 +238,13 @@ def plot_both_forests():
 
 
 if __name__ == "__main__":
-    # rng = np.random.default_rng(1)
-    # data = load_data.Data(dataset="diabetes")
+    rng = np.random.default_rng(1)
+    data = load_data.Data(dataset="diabetes")
 
-    tune_SVC(data)
+    # tune_SVC(data)
     # tune_DecisionTree(data)
-    #tune_RandomForest(data)
+    # tune_RandomForest(data)
     # tune_KNeighborsClassifier(data)
-    #plot_both_trees()
-
-    plot_both_forests()
+    # plot_both_trees()
+    # plot_both_forests()
+    tune_AdaBoostClassifier(data, 2)
