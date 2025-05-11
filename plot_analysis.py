@@ -4,7 +4,7 @@ import pandas as pd
 import src.utils as utils
 
 # NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
-NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
+NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
 FILENAME = "runtime_analysis_" + NAME
 
 # ------------------------------------------------------------
@@ -124,5 +124,5 @@ if __name__ == "__main__":
     # plot_runtime_vs_accuracy(dataset="cancer")
     # plot_runtime_vs_model_complexity()
     # plot_runtime_vs_predict_time()
-    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear")
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear")
     # plot_runtime_vs_accuracy(dataset="cancer")
