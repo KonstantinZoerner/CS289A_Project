@@ -106,6 +106,9 @@ if __name__ == "__main__":
           }
     
     #analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.arange(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
+    
+    analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=np.logspace(-1, 0, 50), runs=100, name="nacht_tuned_cancer_log[-1, 0, 50]_100", load_old_data=False, save_data=True)
     #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[0.1], runs=100, name="tuned_diabetes_[0.1]_100", load_old_data=False, save_data=True)
-    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[1.0], runs=100, name="tuned_diabetes_[1]_100", load_old_data=False, save_data=True)
-    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.arange(0.0005, 0.01, 0.0005), runs=10, name="tuned_diabetes_[0.0005, 0.001, 0.0005]_10", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=[1.0], runs=100, name="nacht_tuned_diabetes_[1]_100", load_old_data=False, save_data=True)
+    analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.logspace(-1, 0, 50), runs=10, name="nacht_tuned_diabetes_log[-1, 0, 50]_100", load_old_data=False, save_data=True)
+    #analyze(models=models_diabetes, datasets=["diabetes"], ratio_training_data=np.arange(0.0005, 0.01, 0.0005), runs=10, name="tuned_diabetes_[0.0005, 0.001, 0.0005]_10", load_old_data=False, save_data=True)
