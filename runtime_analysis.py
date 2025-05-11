@@ -88,7 +88,7 @@ if __name__ == "__main__":
           "Random Forrest": dt.RandomForest(max_depth=7, n_estimators=100),
           "SVM": svm.SVM(C=100),
           "AdaBoost": ada_boost.AdaBoost(n_estimators=100),
-          "kNN": knn.KNN(k=4),
+          "kNN": knn.KNN(n_neighbors=4),
           "Logistic Regression": lr.LogisticRegression(),
           "Neural Network": nn.NeuralNetwork()}
     
@@ -98,7 +98,7 @@ if __name__ == "__main__":
           "Random Forrest": dt.RandomForest(max_depth=13, n_estimators=400),
           "SVM": svm.non_linear_SVM(C=20, kernel="rbf"),
           "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
-          "kNN": knn.KNN(k=21),
+          "kNN": knn.KNN(n_neighbors=21),
           "Logistic Regression": lr.LogisticRegression(),
           "Neural Network": nn.NeuralNetwork()}
     
