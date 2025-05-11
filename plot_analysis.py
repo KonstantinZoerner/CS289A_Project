@@ -153,6 +153,11 @@ def plot_runtime_vs_predict_time(dataset="diabetes"):
                          x_label="Training Time (s)", y_label="Prediction Time (s)",
                          title=True)
     
+def plot_predict_time_vs_error(dataset="diabetes", **kwargs):
+    plot_analysis_x_vs_y(dataset=dataset, x="predict_time", y="error",
+                         x_label="Prediction Time (s)", y_label="Error",
+                         title=True, **kwargs)
+    
 # ------------------------------------------------------------
 # Development of variable vs training data ratio
 # ------------------------------------------------------------
@@ -231,8 +236,11 @@ if __name__ == "__main__":
                                     )
 
     # scatter plot
-    plot_runtime_vs_accuracy(dataset="diabetes_50_50", train_ratio=1.0, legend=True, )
+    plot_runtime_vs_accuracy(dataset="diabetes_50_50", train_ratio=1.0, legend=True)
     plot_runtime_vs_accuracy(dataset="diabetes_50_50", train_ratio=1.0, legend=False)
+
+    plot_predict_time_vs_error(dataset="diabetes_50_50", train_ratio=1.0, legend=True)
+    plot_predict_time_vs_error(dataset="diabetes_50_50", train_ratio=1.0, legend=False)
 
 
     # -------------------------------------------------------------       
@@ -253,3 +261,5 @@ if __name__ == "__main__":
     plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=True, y_scale="linear")
     plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=False, y_scale="linear")
 
+    plot_predict_time_vs_error(dataset="cancer", train_ratio=1.0, legend=True, y_scale="linear")
+    plot_predict_time_vs_error(dataset="cancer", train_ratio=1.0, legend=False, y_scale="linear")
