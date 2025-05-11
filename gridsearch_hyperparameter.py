@@ -192,7 +192,6 @@ def tune_KNeighborsClassifier(data):
     tuner.save_results()
 
 def tune_AdaBoostClassifier(data, depth=2):
-    filename=f"Addaboost_Diabetes_{depth}_few_estimators"
     model = RandomForestClassifier()
     if data.name == "cancer":
         n_runs = 10
@@ -205,8 +204,8 @@ def tune_AdaBoostClassifier(data, depth=2):
     tuner = HyperparameterTuning(model, param_grid={'n_estimators': range(1, 41)},
                                 data=data, runs=n_runs)
     tuner.tune_hyperparameters(verbose=True)
-    tuner.plot_results_1D(param_name='n_estimators', x_scale='linear', filename=filename)
-    tuner.save_results(filename=filename)
+    tuner.plot_results_1D(param_name='n_estimators', x_scale='linear')
+    tuner.save_results()
 
 def load_past_data(dataset, file_path):
     with open(file_path, "r") as f:
