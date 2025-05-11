@@ -8,7 +8,7 @@ import models.knn as knn
 import models.svm as svm
 import models.ada_boost as ada_boost
 import models.logistic_regression as lr
-# import models.neural_network as nn
+import models.neural_network as nn
 from src.losses import One_Zero_Loss
 import os
 from tqdm import tqdm
@@ -91,7 +91,7 @@ if __name__ == "__main__":
           "AdaBoost": ada_boost.AdaBoost(n_estimators=100),
           "kNN": knn.KNN(n_neighbors=4),
           "Logistic Regression": lr.LogisticRegression(),
-          #"Neural Network": nn.NeuralNetwork()
+          "Neural Network": nn.NeuralNetwork()
           }
     
     models_diabetes = {"QDA": GDA.QDA(reg_param = 1e-4),
@@ -102,7 +102,7 @@ if __name__ == "__main__":
           "AdaBoost": ada_boost.AdaBoost(n_estimators=30),
           "kNN": knn.KNN(n_neighbors=21),
           "Logistic Regression": lr.LogisticRegression(),
-          #"Neural Network": nn.NeuralNetwork()
+          "Neural Network": nn.NeuralNetwork()
           }
     
     analyze(models=models_cancer, datasets=["cancer"], ratio_training_data=range(0.1, 1.05, 0.05), runs=100, name="tuned_cancer_[0.1, 1.05, 0.05]_100", load_old_data=False, save_data=True)
