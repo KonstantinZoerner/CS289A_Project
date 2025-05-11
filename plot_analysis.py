@@ -196,7 +196,7 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
 
 def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
     plot_x_vs_training_data_ratio(dataset=dataset, y="error", 
-                         y_label="Error", title=True, remove_models=["SVM"], *args, **kwargs)
+                         y_label="Error", title=True, *args, **kwargs)
 
 
 if __name__ == "__main__":
@@ -204,20 +204,20 @@ if __name__ == "__main__":
     FILENAME = "runtime_analysis_" + NAME
     plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
     plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True)
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True, y_scale="linear")
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False, y_scale="linear")
 
 
     NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
     FILENAME = "runtime_analysis_" + NAME
-    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=True)
-    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=False)
-    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=True)
-    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=False)
+    plot_error_vs_training_data_ratio(dataset="cancer", legend=True, y_scale="log", x_scale="log")
+    plot_error_vs_training_data_ratio(dataset="cancer", legend=False, y_scale="log", x_scale="log")
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=True, y_scale="linear")
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=False, y_scale="linear")
 
 
-    # NAME = "tuned_diabetes_[00.0005, 0.001, 0.0005]_100"
-    # FILENAME = "runtime_analysis_" + NAME
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
+    NAME = "tuned_diabetes_[0.0005, 0.001, 0.0005]_10"
+    FILENAME = "runtime_analysis_" + NAME
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True, y_scale="log", remove_models=["QDA", "SVM"])
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False, y_scale="log", remove_models=[    "QDA", "SVM"])
     
