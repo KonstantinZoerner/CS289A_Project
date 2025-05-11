@@ -3,6 +3,21 @@ import matplotlib as mpl
 import pandas as pd 
 import src.utils as utils
 
+model_to_color = {
+    "QDA": "#1f77b4",     # Blue
+    "LDA": "#ff7f0e",     # Orange
+    "Decision Tree": "#2ca02c",  # Green
+    "Decicision Tree": "#2ca02c",  # Green (typo correction)
+    "Random Forest": "#d62728",  # Red
+    "Random Forrest": "#d62728",  # Red (typo correction)
+    "Random Forest (No Bootstrap)": "#9467bd",  # Purple
+    "SVM": "#8c564b",     # Brown
+    "AdaBoost": "#e377c2",  # Pink
+    "kNN": "#7f7f7f",     # Gray
+    "Logistic Regression": "#17becf",  # Cyan
+    "Neural Network": "#000000",  # Black
+}
+
 fig_width = 3.25
 fig_height = fig_width * 0.75
 FULL = {
@@ -62,12 +77,13 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
     mpl.rcParams.update(figure_settings)
 
     for (y_data, complexity, label) in zip(y_data, x_data, models):
-        plt.scatter(complexity, y_data, label=label)
+        plt.scatter(complexity, y_data, label=label, color=model_to_color[label], marker="+", s=40)
     if legend:
         plt.legend()
         l = "l"
     else:
         l = ""
+    plt.grid()
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     # NO titles to comply with ICML format guidelines
@@ -126,12 +142,13 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
         y_data = runtime_results.loc[(dataset, train_ratios, label), y].to_numpy()
         sorted_train_ratios, sorted_y_data = utils.sort_np_arrays_by_first_column(train_ratios, y_data)
         
-        plt.plot(sorted_train_ratios, sorted_y_data, label=label)
+        plt.plot(sorted_train_ratios, sorted_y_data, label=label, color=model_to_color[label])
     if legend:
         plt.legend()
         l = "l"
     else:
         l = ""
+    plt.grid()
     plt.xlabel("Ratio of used Training Data")
     plt.ylabel(y_label)
     # No plot title to comply with ICML format guidelines
