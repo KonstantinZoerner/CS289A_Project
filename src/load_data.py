@@ -11,6 +11,8 @@ class Data:
             path = "datasets/breast_cancer/data.csv"
         elif dataset == "diabetes":
             path = "datasets/diabetes/diabetes_binary_health_indicators_BRFSS2015.csv"
+        elif dataset == "diabetes_50_50":
+            path = "datasets/diabetes/diabetes_binary_5050split_health_indicators_BRFSS2015.csv"
         else:
             raise NotImplementedError("This dataset does not exist")
         
