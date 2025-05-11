@@ -243,8 +243,8 @@ if __name__ == "__main__":
 
     # tune_SVC(data)
     #tune_DecisionTree(data)
-    tune_RandomForest(data)
+    # tune_RandomForest(data)
     # tune_KNeighborsClassifier(data)
     # plot_both_trees()
     # plot_both_forests()
-    # tune_AdaBoostClassifier(data, 2)
+    tune_AdaBoostClassifier(data, 2)
