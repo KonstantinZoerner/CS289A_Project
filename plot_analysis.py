@@ -200,12 +200,12 @@ def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
 
 
 if __name__ == "__main__":
-    NAME = "nacht_tuned_diabetes_log[-1, 0, 50]_100"
+    NAME = "nacht_tuned_diabetes_log[-3_5, 0, 100]_10"
     FILENAME = "runtime_analysis_" + NAME
-    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
-    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True)
-    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False)
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=True)
+    plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=False)
 
 
     NAME = "nacht_tuned_cancer_log[-1, 0, 100]_100"

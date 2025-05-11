@@ -1,0 +1,2 @@
+dataset,training_ratio,model,training_time,predict_time,error,model_size
+diabetes,1.0,QDA,0.07680419999996957,0.012324499999522232,0.23021224506732507,924.0
