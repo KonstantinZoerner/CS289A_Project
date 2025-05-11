@@ -3,7 +3,8 @@ import matplotlib as mpl
 import pandas as pd 
 import src.utils as utils
 
-NAME = "cancer_100_runs_[0.05-1.0, 0.5]"
+# NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
+NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
 FILENAME = "runtime_analysis_" + NAME
 
 # ------------------------------------------------------------
@@ -120,8 +121,8 @@ def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
 
 if __name__ == "__main__":
     # plot_model_complexity_vs_accuracy()
-    # plot_runtime_vs_accuracy()
+    # plot_runtime_vs_accuracy(dataset="cancer")
     # plot_runtime_vs_model_complexity()
     # plot_runtime_vs_predict_time()
     plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear")
-    plot_runtime_vs_accuracy(dataset="cancer")
+    # plot_runtime_vs_accuracy(dataset="cancer")
