@@ -11,12 +11,44 @@ model_to_color = {
     "Random Forest": "C3",  
     "Random Forrest": "C3",  
     "Random Forest (No Bootstrap)": "C4",  
-    "SVM": "C5",     
-    "AdaBoost": "C6",  
-    "kNN": "C7",     
-    "Logistic Regression": "C8",  
-    "Neural Network": "C9",  
+    "SVM": "C4",     
+    "AdaBoost": "C0", 
+    "kNN": "C1",     
+    "Logistic Regression": "C2",  
+    "Neural Network": "C3" 
 }
+
+model_to_style = {
+    "QDA": "-",     
+    "LDA": "-",     
+    "Decision Tree": "-",  
+    "Decicision Tree": "-",  
+    "Random Forest": "-",  
+    "Random Forrest": "-",  
+    "Random Forest (No Bootstrap)": "-",  
+    "SVM": "-",     
+    "AdaBoost": "--",  
+    "kNN": "--",     
+    "Logistic Regression": "--",  
+    "Neural Network": "--"  
+}
+
+model_to_marker = {
+    "QDA": "+",     
+    "LDA": "+",     
+    "Decision Tree": "+",  
+    "Decicision Tree": "+",  
+    "Random Forest": "+",  
+    "Random Forrest": "+",  
+    "Random Forest (No Bootstrap)": "+",  
+    "SVM": "+",     
+    "AdaBoost": "2",  
+    "kNN": "2",     
+    "Logistic Regression": "2",  
+    "Neural Network": "2" 
+}
+
+
 
 fig_width = 3.25
 fig_height = fig_width * 0.75
@@ -77,7 +109,7 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
     mpl.rcParams.update(figure_settings)
 
     for (y_data, complexity, label) in zip(y_data, x_data, models):
-        plt.scatter(complexity, y_data, label=label, color=model_to_color[label], marker="+", s=40)
+        plt.scatter(complexity, y_data, label=label, color=model_to_color[label], marker=model_to_marker[label], s=40)
     if legend:
         plt.legend()
         l = "l"
@@ -143,7 +175,7 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
         y_data = runtime_results.loc[(dataset, train_ratios, label), y].to_numpy()
         sorted_train_ratios, sorted_y_data = utils.sort_np_arrays_by_first_column(train_ratios, y_data)
         
-        plt.plot(sorted_train_ratios, sorted_y_data, label=label, color=model_to_color[label])
+        plt.plot(sorted_train_ratios, sorted_y_data, label=label, color=model_to_color[label], linestyle = model_to_style[label])
     if legend:
         plt.legend()
         l = "l"
@@ -168,24 +200,24 @@ def plot_error_vs_training_data_ratio(dataset="diabetes", *args, **kwargs):
 
 
 if __name__ == "__main__":
-    # NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
-    # FILENAME = "runtime_analysis_" + NAME
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
-    # plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True)
-    # plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False)
-
-
-    # NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
-    # FILENAME = "runtime_analysis_" + NAME
-    # plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=True)
-    # plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=False)
-    # plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=True)
-    # plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=False)
-
-
-    NAME = "tuned_diabetes_[00.0005, 0.001, 0.0005]_100"
+    NAME = "tuned_diabetes_[0.01, 0.105, 0.005]_100"
     FILENAME = "runtime_analysis_" + NAME
     plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
     plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=0.1, remove_modles=["QDA"], legend=False)
+
+
+    NAME = "tuned_cancer_[0.1, 1.05, 0.05]_100"
+    FILENAME = "runtime_analysis_" + NAME
+    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=True)
+    plot_error_vs_training_data_ratio(dataset="cancer", x_scale="linear", legend=False)
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=True)
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, remove_modles=["QDA"], legend=False)
+
+
+    # NAME = "tuned_diabetes_[00.0005, 0.001, 0.0005]_100"
+    # FILENAME = "runtime_analysis_" + NAME
+    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=True)
+    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="linear", legend=False)
     
