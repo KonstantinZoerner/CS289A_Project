@@ -53,6 +53,22 @@ HALF = {
             "ps.fonttype": 42
         }
 
+TWO_THIRDS = {
+            "text.usetex": True,
+            "font.family": "serif",
+            "font.size": 10,
+            "axes.labelsize": 10,
+            "axes.titlesize": 10,
+            "legend.fontsize": 8,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "lines.linewidth": 1,
+            "lines.markersize": 4,
+            "figure.figsize": [0.66 * fig_width, 0.66 * fig_height],
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42
+        }
+
 class HyperparameterTuning:
     def __init__(self, model, param_grid, data, runs=1):
         self.model = model
@@ -234,11 +250,17 @@ def plot_both_forests():
     ax1 = tuner_cancer.plot_results_1D(param_name='n_estimators', x_scale='linear', show=False, save=False, close=False, label="Breast Cancer")
     tuner_diabetes.plot_results_1D(param_name='n_estimators', x_scale='linear', show=True, save=True, close=True, filename="forests_combined_n_estimators_(30,5)", ax=ax1.twinx(), label="Diabetes")
 
+def plot_results():
+    tuner_tree = load_past_data("cancer", "grid_search_data/cancer_DecisionTreeClassifier_1000.json")
+    tuner_forest = load_past_data("cancer", "grid_search_data/cancer_RandomForestClassifier_30.json")
 
+    tuner_tree.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="finished_param_tunung_tree_1", graph_settings=TWO_THIRDS)
+    tuner_forest.plot_results_1D(param_name='max_depth', x_scale='linear', show=True, save=True, close=True, filename="finished_param_tunung_forest_1", graph_settings=TWO_THIRDS)
+    tuner_forest.plot_results_1D(param_name='n_estimators', x_scale='linear', show=True, save=True, close=True, filename="finished_param_tunung_forest_2", graph_settings=TWO_THIRDS)
 
 if __name__ == "__main__":
     rng = np.random.default_rng(1)
-    data = load_data.Data(dataset="diabetes_50_50")
+    data = load_data.Data(dataset="cancer")
 
     # tune_SVC(data)
     #tune_DecisionTree(data)
@@ -246,4 +268,5 @@ if __name__ == "__main__":
     # tune_KNeighborsClassifier(data)
     # plot_both_trees()
     # plot_both_forests()
-    tune_AdaBoostClassifier(data, 2)
+    # tune_AdaBoostClassifier(data, 2)
+    plot_results()
