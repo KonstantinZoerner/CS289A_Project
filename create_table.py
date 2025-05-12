@@ -11,7 +11,7 @@ def generate_latex_table_full(cancer_path, diabetes_path, cancer_ratio, diabetes
 
     err_cancer = df_cancer.loc[("cancer", cancer_ratio, common_models), data].to_numpy()
 
-    err_diabetes = df_diabetes.loc[("diabetes", diabetes_ratio, common_models), data].to_numpy()
+    err_diabetes = df_diabetes.loc[("diabetes_50_50", diabetes_ratio, common_models), data].to_numpy()
     
     combined = pd.DataFrame(data = np.vstack((err_cancer,err_diabetes)).T, index = common_models, columns = ["cancer", "diabetes"])
 
@@ -37,7 +37,7 @@ def generate_latex_table_full(cancer_path, diabetes_path, cancer_ratio, diabetes
     for model_name, row in combined.iterrows():
         if data == "error":
             factor = 100
-        elif data == "training_time":
+        elif data == "training_time" or data == "predict_time":
             factor = 1000
         else:
             factor = 1
@@ -61,13 +61,13 @@ def generate_latex_table_full(cancer_path, diabetes_path, cancer_ratio, diabetes
 # Example usage:
 latex_code = generate_latex_table_full(
     cancer_path="analysis_data/runtime_analysis_nacht_tuned_cancer_log[-1, 0, 100]_100.csv",
-    diabetes_path="analysis_data/runtime_analysis_nacht_tuned_diabetes_log[-3_5, 0, 100]_10.csv",
+    diabetes_path="analysis_data/runtime_analysis_tuned_diabetes_log[-3,0,50]_10.csv",
     cancer_ratio=1.0,
     diabetes_ratio = 1.0,
     decimal_places = 2,
-    label = r"Training Time [ms]",
+    label = r"Prediction Time [ms]",
     #label = r"Error [\%]",
-    data = "training_time"
+    data = "predict_time"
 )
 
 print(latex_code)
