@@ -94,8 +94,8 @@ FILENAME = "runtime_analysis_" + NAME
 def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error", 
                          models=None, remove_modles=None, 
                          x_label="Number of Parameters", y_label="Error",
-                         title=None, x_scale="log", y_scale="log", train_ratio=1.0, figure_settings=FULL,
-                         legend=False):
+                         title=None, x_scale="log", y_scale="linear", train_ratio=1.0, figure_settings=FULL,
+                         legend=False, y_ticks=None, y_ticks_label=None):
     
     runtime_results = pd.read_csv(f"analysis_data/{FILENAME}.csv", index_col=[0, 1, 2])
     if models is None:
@@ -126,6 +126,10 @@ def plot_analysis_x_vs_y(dataset="diabetes", x="model_size", y="error",
     #     plt.title(f"{x_label} vs {y_label} for {dataset} dataset")
     plt.xscale(x_scale)
     plt.yscale(y_scale)
+    if y_ticks is not None:
+        plt.yticks(y_ticks)
+        plt.gca().set_yticklabels(y_ticks_label)
+
     plt.savefig(f"figures/{x}_vs_{y}_{dataset}_{NAME}{l}.pdf", bbox_inches="tight")
     plt.show()
 
@@ -148,6 +152,11 @@ def plot_runtime_vs_predict_time(dataset="diabetes"):
     plot_analysis_x_vs_y(dataset=dataset, x="training_time", y="predict_time",
                          x_label="Training Time (s)", y_label="Prediction Time (s)",
                          title=True)
+    
+def plot_predict_time_vs_error(dataset="diabetes", **kwargs):
+    plot_analysis_x_vs_y(dataset=dataset, x="predict_time", y="error",
+                         x_label="Prediction Time (s)", y_label="Error",
+                         title=True, **kwargs)
     
 # ------------------------------------------------------------
 # Development of variable vs training data ratio
@@ -195,7 +204,7 @@ def plot_x_vs_training_data_ratio(dataset="diabetes", y="error",
     plt.yscale(y_scale)
     if y_ticks is not None:
         plt.yticks(y_ticks)
-        plt.gca().set_xticklabels(y_ticks_label)
+        plt.gca().set_yticklabels(y_ticks_label)
     
     plt.savefig(f"figures/{y}_vs_training_ratio_{dataset}_{NAME}{l}{suffix}.pdf", bbox_inches="tight")
     plt.show()
@@ -210,37 +219,47 @@ def plot_training_time_vs_training_data_ratio(dataset="diabetes", *args, **kwarg
 
 
 if __name__ == "__main__":
-    NAME = "nacht_tuned_diabetes_log[-3_5, 0, 100]_10"
+    # -------------------------------------------------------------
+    #                       Diabetes 50/50
+    # -------------------------------------------------------------
+    NAME = "tuned_diabetes_log[-3,0,50]_10"
     FILENAME = "runtime_analysis_" + NAME
-    # linear y
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="linear", legend=True)
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="linear", legend=False)
 
-    # log y
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=True, remove_models=["QDA", "Neural Network"], 
-    #                                   y_ticks=[0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21], 
-    #                                   y_ticks_label=["0.13", "0.14", "0.15", "0.16", "0.17", "0.18", "0.19", "0.20", "0.21"], suffix="_without")
-    # plot_error_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=False, remove_models=["QDA", "Neural Network"],
-    #                                   y_ticks=[0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21], 
-    #  
-    #                                  y_ticks_label=["0.13", "0.14", "0.15", "0.16", "0.17", "0.18", "0.19", "0.20", "0.21"], suffix="_without")
+    # ratio
+    plot_error_vs_training_data_ratio(dataset="diabetes_50_50", x_scale="log", y_scale="log", legend=True, 
+                                      y_ticks=[0.25, 0.30, 0.35, 0.4, 0.45, 0.5],
+                                    y_ticks_label=["0.25", "0.30", "0.35", "0.40", "0.45", "0.50"]
+                                      )
+    plot_error_vs_training_data_ratio(dataset="diabetes_50_50", x_scale="log", y_scale="log", legend=False,
+                                    y_ticks=[0.25, 0.30, 0.35, 0.4, 0.45, 0.5],
+                                    y_ticks_label=["0.25", "0.30", "0.35", "0.40", "0.45", "0.50"]
+                                    )
+
     # scatter plot
-    # plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=True)
-    # plot_runtime_vs_accuracy(dataset="diabetes", train_ratio=1.0, remove_modles=["QDA"], legend=False)
+    plot_runtime_vs_accuracy(dataset="diabetes_50_50", train_ratio=1.0, legend=True)
+    plot_runtime_vs_accuracy(dataset="diabetes_50_50", train_ratio=1.0, legend=False)
 
-    # training time
-    #log y
-    plot_training_time_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=True, remove_models=["QDA", "Neural Network"], 
-                                      suffix="_without")
-    plot_training_time_vs_training_data_ratio(dataset="diabetes", x_scale="log", y_scale="log", legend=False, remove_models=["QDA", "Neural Network"],
-                                        suffix="_without")
-     
-    #      
+    plot_predict_time_vs_error(dataset="diabetes_50_50", train_ratio=1.0, legend=True)
+    plot_predict_time_vs_error(dataset="diabetes_50_50", train_ratio=1.0, legend=False)
 
-    # NAME = "nacht_tuned_cancer_log[-1, 0, 100]_100"
-    # FILENAME = "runtime_analysis_" + NAME
-    # plot_error_vs_training_data_ratio(dataset="cancer", legend=True, y_scale="log", x_scale="log")
-    # plot_error_vs_training_data_ratio(dataset="cancer", legend=False, y_scale="log", x_scale="log")
-    # plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=True, y_scale="linear")
-    # plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=False, y_scale="linear")
 
+    # -------------------------------------------------------------       
+    #                           Cancer
+    # -------------------------------------------------------------
+    NAME = "nacht_tuned_cancer_log[-1, 0, 100]_100"
+    FILENAME = "runtime_analysis_" + NAME
+    # ratio
+    plot_error_vs_training_data_ratio(dataset="cancer", legend=True, y_scale="log", x_scale="log",
+                                      y_ticks=[0.03, 0.04, 0.06, 0.1],
+                                    y_ticks_label=["0.03", "0.04", "0.06", "0.10"]
+                                    )
+    plot_error_vs_training_data_ratio(dataset="cancer", legend=False, y_scale="log", x_scale="log",
+                                      y_ticks=[0.03, 0.04, 0.06, 0.1],
+                                    y_ticks_label=["0.03", "0.04", "0.06", "0.10"]
+                                    )
+    # scatter plot
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=True, y_scale="linear")
+    plot_runtime_vs_accuracy(dataset="cancer", train_ratio=1.0, legend=False, y_scale="linear")
+
+    plot_predict_time_vs_error(dataset="cancer", train_ratio=1.0, legend=True, y_scale="linear")
+    plot_predict_time_vs_error(dataset="cancer", train_ratio=1.0, legend=False, y_scale="linear")
